@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.test);
 
         cardView = findViewById(R.id.base_cardview);
-        arrow = findViewById(R.id.arrow_button);
+        arrow = findViewById(R.id.arrowItem);
         hiddenView = findViewById(R.id.hidden_view);
 
         arrow.setOnClickListener(new View.OnClickListener() {

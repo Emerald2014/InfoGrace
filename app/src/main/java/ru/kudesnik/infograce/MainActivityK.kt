@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
+import com.google.android.material.tabs.TabLayout
 
 
 class MainActivityK : AppCompatActivity() {
@@ -40,22 +41,57 @@ class MainActivityK : AppCompatActivity() {
         val cardView = headerLayout.findViewById<CardView?>(R.id.base_cardview)
         val arrow = headerLayout.findViewById<ImageButton?>(R.id.arrow_button)
         val hiddenView = headerLayout.findViewById<LinearLayout?>(R.id.hidden_view)
-        arrow.setOnClickListener {
+        arrow?.setOnClickListener {
 
-                    Toast.makeText(this@MainActivityK, "Toast", Toast.LENGTH_SHORT).show()
-                    if (hiddenView.visibility == View.VISIBLE) {
-                        TransitionManager.beginDelayedTransition(cardView, AutoTransition())
-                        hiddenView.visibility = View.GONE
-                        arrow.setImageResource(R.drawable.ic_baseline_keyboard_arrow_down_24)
-                    } else {
-                        TransitionManager.beginDelayedTransition(
-                            cardView,
-                            AutoTransition()
-                        )
-                        hiddenView.visibility = View.VISIBLE
-                        arrow.setImageResource(R.drawable.ic_baseline_keyboard_arrow_down_24)
-                    }
-                }
-
+            Toast.makeText(this@MainActivityK, "Toast", Toast.LENGTH_SHORT).show()
+            if (hiddenView.visibility == View.VISIBLE) {
+                TransitionManager.beginDelayedTransition(cardView, AutoTransition())
+                hiddenView.visibility = View.GONE
+                arrow.setImageResource(R.drawable.ic_baseline_keyboard_arrow_down_24)
+            } else {
+                TransitionManager.beginDelayedTransition(
+                    cardView,
+                    AutoTransition()
+                )
+                hiddenView.visibility = View.VISIBLE
+                arrow.setImageResource(R.drawable.ic_baseline_keyboard_arrow_down_24)
             }
         }
+        val tabLayout = headerLayout.findViewById<TabLayout>(R.id.tabLayout)
+        tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                Toast.makeText(
+                    this@MainActivityK,
+                    "Выбран ${tab?.position} таб ${tab?.id.toString()}",
+                    Toast.LENGTH_SHORT
+                ).show()
+                when (tab?.position) {
+                    0 -> {
+                        supportFragmentManager.beginTransaction()
+                            .replace(R.id.containerDrawer, LayerFragment.newInstance())
+                            .commitNow()
+                    }
+                    1 -> {
+                        supportFragmentManager.beginTransaction()
+                            .replace(R.id.containerDrawer, BackgroundFragment.newInstance())
+                            .commitNow()
+                    }
+                    2 -> {
+                        supportFragmentManager.beginTransaction()
+                            .replace(R.id.containerDrawer, MissionFragment.newInstance())
+                            .commitNow()
+                    }
+                }
+            }
+
+            override fun onTabReselected(tab: TabLayout.Tab?) {
+                // Handle tab reselect
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab?) {
+                // Handle tab unselect
+            }
+        })
+    }
+}
