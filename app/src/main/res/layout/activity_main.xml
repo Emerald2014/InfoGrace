@@ -34,12 +34,10 @@
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/navigationView"
-        android:layout_width="match_parent"
+        android:layout_width="390dp"
         android:layout_height="match_parent"
         android:layout_gravity="end"
-        android:maxWidth="380dp"
         android:background="#383F55"
-
 
          />
 

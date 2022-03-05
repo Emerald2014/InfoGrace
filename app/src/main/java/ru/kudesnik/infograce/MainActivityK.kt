@@ -1,23 +1,20 @@
 package ru.kudesnik.infograce
 
 
+import android.content.res.Configuration
+import android.graphics.Point
 import android.os.Bundle
-import android.transition.AutoTransition
-import android.transition.TransitionManager
+import android.util.DisplayMetrics
+import android.util.Log
+import android.view.Display
 import android.view.View
-import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.cardview.widget.CardView
-import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.tabs.TabLayout
 
 
 class MainActivityK : AppCompatActivity() {
-
+//Ширина экрана - 1080, шторка на 391dp закрывает полностью экран
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -35,6 +32,23 @@ class MainActivityK : AppCompatActivity() {
         val headerLayout: View = navigationView.inflateHeaderView(R.layout.header_navigation_drawer)
 // Теперь, при необходимости, мы можем найти элементы внутри
 // header'а
+val widthNav = navigationView.width
+        val display: Display = windowManager.defaultDisplay
+        val point = Point()
+        display.getSize(point)
+        val screenWidth: Int = point.x
+        val screenHeight: Int = point.y
+
+// Теперь получим необходимую информацию
+        val width = Integer.toString(screenWidth)
+        val height = Integer.toString(screenHeight)
+
+        val info = "Ширина: $width; Высота: $height"
+
+        Log.i("ScreenInfo", info)
+        Log.i("ScreenInfo", getScreenSizeCategory())
+        Log.i("ScreenInfo", widthNav.toString())
+        getDeviceDensity()
 
 
 //        val cardView = headerLayout.findViewById<CardView?>(R.id.base_cardview)
@@ -102,5 +116,27 @@ class MainActivityK : AppCompatActivity() {
                 // Handle tab unselect
             }
         })
+    }
+    private fun getScreenSizeCategory(): String {
+        return when (resources.configuration.screenLayout
+                and Configuration.SCREENLAYOUT_SIZE_MASK) {
+            Configuration.SCREENLAYOUT_SIZE_XLARGE -> "XLarge screen"
+            Configuration.SCREENLAYOUT_SIZE_LARGE -> "Large screen"
+            Configuration.SCREENLAYOUT_SIZE_NORMAL -> "Normal size screen"
+            Configuration.SCREENLAYOUT_SIZE_SMALL -> "Small size screen"
+            Configuration.SCREENLAYOUT_SIZE_UNDEFINED -> "Undefined screen size"
+            else -> "Error"
+        }
+    }
+    private fun getDeviceDensity() {
+        val dpiDensity = resources.displayMetrics.densityDpi
+        when (dpiDensity) {
+            DisplayMetrics.DENSITY_LOW -> Log.i("Density", "DENSITY_LOW")
+            DisplayMetrics.DENSITY_MEDIUM -> Log.i("Density", "DENSITY_MEDIUM")
+            DisplayMetrics.DENSITY_HIGH -> Log.i("Density", "DENSITY_HIGH")
+            DisplayMetrics.DENSITY_XHIGH -> Log.i("Density", "DENSITY_XHIGH")
+            DisplayMetrics.DENSITY_XXHIGH -> Log.i("Density", "DENSITY_XXHIGH")
+            DisplayMetrics.DENSITY_XXXHIGH -> Log.i("Density", "DENSITY_XXXHIGH")
+        }
     }
 }

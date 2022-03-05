@@ -9,5 +9,6 @@
     <color name="white">#FFFFFFFF</color>
 
     <color name="tab_text_color">#d0d1d7</color>
-    <color name="app_background">#383F55</color>
+    <color name="app_background">#252D45</color>
+    <color name="card_extended">#4D566F</color>
 </resources>

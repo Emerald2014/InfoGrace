@@ -44,9 +44,9 @@ class LayerFragment : Fragment() {
 //        val ivHeaderPhoto: ImageView = headerLayout.findViewById(R.id.imageView)
 
         with(binding) {
-            val cardView = baseCardview
-            val arrow = arrowButton
-            val hiddenView = hiddenView
+            val cardView = included.baseCardView
+            val arrow = included.arrowButton
+            val hiddenView = included.hiddenView
             arrow.setOnClickListener {
 
                 Toast.makeText(requireActivity(), "ToastInFragment", Toast.LENGTH_SHORT).show()
@@ -64,38 +64,50 @@ class LayerFragment : Fragment() {
                 }
             }
 //Slider
-            val slider = slider
+            val slider = included.slider
             slider.value = getCurrentSlider().toFloat()
-            textViewItemPercent.text = slider.value.toInt().toString()
-            val textItemPercent = textViewItemPercent
+            included.textViewItemPercent.text = slider.value.toInt().toString()
+            val textItemPercent = included.textViewItemPercent
             slider.addOnChangeListener { slider, value, fromUser ->
                 setCurrentSlider(value.toInt())
                 textItemPercent.text = value.toInt().toString()
             }
 //Switch
-            val switch = switchItem
-            switchItem.isChecked =         getCurrentSwitch()
+            val switch = included.switchItem
+            included.switchItem.isChecked = getCurrentSwitch()
 
             switch.setOnCheckedChangeListener { buttonView, isChecked ->
-                val check = if (isChecked) {
-                    "включен"
+                val check = if (isChecked) "включен" else "выключен"
 
-                } else {
-                    "выключен"
-                }
                 Toast.makeText(requireActivity(), "Переключатель $check", Toast.LENGTH_SHORT).show()
                 setCurrentSwitch(isChecked)
+            }
+//Buttons
+            val button1 = included.itemButton1
+            button1.setOnClickListener {
+                Toast.makeText(requireContext(), "Нажата кнопка 1", Toast.LENGTH_SHORT).show()
+            }
+            val button2 = included.itemButton2
+            button2.setOnClickListener {
+                Toast.makeText(requireContext(), "Нажата кнопка 2", Toast.LENGTH_SHORT).show()
+            }
+            val button3 = included.itemButton3
+            button3.setOnClickListener {
+                Toast.makeText(requireContext(), "Нажата кнопка 3", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
+
     private fun setCurrentSlider(sliderValue: Int) {
         val sharedPreferences: SharedPreferences = requireActivity().getSharedPreferences(
-            LAYER_SETTINGS, AppCompatActivity.MODE_PRIVATE        )
+            LAYER_SETTINGS, AppCompatActivity.MODE_PRIVATE
+        )
         val editor: SharedPreferences.Editor = sharedPreferences.edit()
         editor.putInt(SLIDER_VALUE, sliderValue)
         editor.apply()
     }
+
     private fun getCurrentSlider(): Int {
         val sharedPreferences: SharedPreferences = requireActivity().getSharedPreferences(
             LAYER_SETTINGS, AppCompatActivity.MODE_PRIVATE
