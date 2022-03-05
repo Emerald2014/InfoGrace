@@ -1,5 +1,6 @@
 package ru.kudesnik.infograce
 
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.transition.AutoTransition
 import android.transition.TransitionManager
@@ -7,41 +8,28 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
-import android.widget.LinearLayout
 import android.widget.Toast
-import androidx.cardview.widget.CardView
-import com.google.android.material.navigation.NavigationView
+import androidx.appcompat.app.AppCompatActivity
+import ru.kudesnik.infograce.databinding.FragmentLayerBinding
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+private const val LAYER_SETTINGS = "layer_settings"
+private const val SWITCH_CHECKED = "switch_checked"
+private const val SLIDER_VALUE = "SLIDER_VALUE"
+//private const val
 
-/**
- * A simple [Fragment] subclass.
- * Use the [LayerFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class LayerFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private var _binding: FragmentLayerBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_layer, container, false)
+
+        _binding = FragmentLayerBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -55,30 +43,85 @@ class LayerFragment : Fragment() {
 
 //        val ivHeaderPhoto: ImageView = headerLayout.findViewById(R.id.imageView)
 
-        val cardView =activity?.findViewById<CardView?>(R.id.base_cardview)
-        val arrow = activity?.findViewById<ImageButton?>(R.id.arrow_button)
-        val hiddenView = activity?.findViewById<LinearLayout?>(R.id.hidden_view)
-        arrow?.setOnClickListener {
+        with(binding) {
+            val cardView = baseCardview
+            val arrow = arrowButton
+            val hiddenView = hiddenView
+            arrow.setOnClickListener {
 
-            Toast.makeText(requireActivity(), "Toast", Toast.LENGTH_SHORT).show()
-            if (hiddenView?.visibility == View.VISIBLE) {
-                TransitionManager.beginDelayedTransition(cardView, AutoTransition())
-                hiddenView?.visibility = View.GONE
-                arrow.setImageResource(R.drawable.ic_baseline_keyboard_arrow_down_24)
-            } else {
-                TransitionManager.beginDelayedTransition(
-                    cardView,
-                    AutoTransition()
-                )
-                hiddenView?.visibility = View.VISIBLE
-                arrow.setImageResource(R.drawable.ic_baseline_keyboard_arrow_down_24)
+                Toast.makeText(requireActivity(), "ToastInFragment", Toast.LENGTH_SHORT).show()
+                if (hiddenView.visibility == View.VISIBLE) {
+                    TransitionManager.beginDelayedTransition(cardView, AutoTransition())
+                    hiddenView.visibility = View.GONE
+                    arrow.setImageResource(R.drawable.ic_baseline_keyboard_arrow_down_24)
+                } else {
+                    TransitionManager.beginDelayedTransition(
+                        cardView,
+                        AutoTransition()
+                    )
+                    hiddenView.visibility = View.VISIBLE
+                    arrow.setImageResource(R.drawable.ic_baseline_keyboard_arrow_up_24)
+                }
+            }
+//Slider
+            val slider = slider
+            slider.value = getCurrentSlider().toFloat()
+            textViewItemPercent.text = slider.value.toInt().toString()
+            val textItemPercent = textViewItemPercent
+            slider.addOnChangeListener { slider, value, fromUser ->
+                setCurrentSlider(value.toInt())
+                textItemPercent.text = value.toInt().toString()
+            }
+//Switch
+            val switch = switchItem
+            switchItem.isChecked =         getCurrentSwitch()
+
+            switch.setOnCheckedChangeListener { buttonView, isChecked ->
+                val check = if (isChecked) {
+                    "включен"
+
+                } else {
+                    "выключен"
+                }
+                Toast.makeText(requireActivity(), "Переключатель $check", Toast.LENGTH_SHORT).show()
+                setCurrentSwitch(isChecked)
             }
         }
     }
 
+    private fun setCurrentSlider(sliderValue: Int) {
+        val sharedPreferences: SharedPreferences = requireActivity().getSharedPreferences(
+            LAYER_SETTINGS, AppCompatActivity.MODE_PRIVATE        )
+        val editor: SharedPreferences.Editor = sharedPreferences.edit()
+        editor.putInt(SLIDER_VALUE, sliderValue)
+        editor.apply()
+    }
+    private fun getCurrentSlider(): Int {
+        val sharedPreferences: SharedPreferences = requireActivity().getSharedPreferences(
+            LAYER_SETTINGS, AppCompatActivity.MODE_PRIVATE
+        )
+        return (sharedPreferences.getInt(SLIDER_VALUE, 0))
+    }
+
+    private fun setCurrentSwitch(switchIsChecked: Boolean) {
+        val sharedPreferences: SharedPreferences = requireActivity().getSharedPreferences(
+            LAYER_SETTINGS, AppCompatActivity.MODE_PRIVATE
+        )
+        val editor: SharedPreferences.Editor = sharedPreferences.edit()
+        editor.putBoolean(SWITCH_CHECKED, switchIsChecked)
+        editor.apply()
+    }
+
+    private fun getCurrentSwitch(): Boolean {
+        val sharedPreferences: SharedPreferences = requireActivity().getSharedPreferences(
+            LAYER_SETTINGS, AppCompatActivity.MODE_PRIVATE
+        )
+        return (sharedPreferences.getBoolean(SWITCH_CHECKED, true))
+    }
+
     companion object {
 
-        fun newInstance() =            LayerFragment()
+        fun newInstance() = LayerFragment()
 
     }
 }
