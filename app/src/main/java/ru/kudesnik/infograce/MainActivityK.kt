@@ -8,16 +8,40 @@ import android.util.DisplayMetrics
 import android.util.Log
 import android.view.Display
 import android.view.View
+import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
+import androidx.cardview.widget.CardView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.tabs.TabLayout
+import ru.kudesnik.infograce.databinding.ActivityMainBinding
+import ru.kudesnik.infograce.databinding.FragmentLayerBinding
 
 
 class MainActivityK : AppCompatActivity() {
-//Ширина экрана - 1080, шторка на 391dp закрывает полностью экран
+
+    private var _binding: ActivityMainBinding? = null
+    private val binding get() = _binding!!
+//    private var adapter: LayerFragmentAdapter? = null
+
+    //Ширина экрана - 1080, шторка на 391dp закрывает полностью экран
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        val valuesString = listOf<String>(
+            "Android", "iPhone", "WindowsMobile",
+            "Blackberry", "WebOS", "Ubuntu", "Windows7", "Max OS X",
+            "Linux", "OS/2"
+        )
+
+//
+//        val recyclerView: RecyclerView = findViewById(R.id.recyclerView)
+//        recyclerView.layoutManager = LinearLayoutManager(this@MainActivityK)
+//        recyclerView.adapter = LayerFragmentAdapter(valuesString)
+
+
 //        if (savedInstanceState == null) {
 //            supportFragmentManager.beginTransaction()
 //                .replace(R.id.container, LayerFragment.newInstance())
@@ -32,7 +56,7 @@ class MainActivityK : AppCompatActivity() {
         val headerLayout: View = navigationView.inflateHeaderView(R.layout.header_navigation_drawer)
 // Теперь, при необходимости, мы можем найти элементы внутри
 // header'а
-val widthNav = navigationView.width
+        val widthNav = navigationView.width
         val display: Display = windowManager.defaultDisplay
         val point = Point()
         display.getSize(point)
@@ -83,7 +107,7 @@ val widthNav = navigationView.width
                     1 -> {
                         supportFragmentManager.beginTransaction()
                             .replace(R.id.containerDrawer, BackgroundFragment.newInstance())
-                            .commitNow()
+                            .commitNowAllowingStateLoss()
                     }
                     2 -> {
                         supportFragmentManager.beginTransaction()
@@ -110,13 +134,16 @@ val widthNav = navigationView.width
                             .replace(R.id.containerDrawer, MissionFragment.newInstance())
                             .commitNow()
                     }
-                }            }
+                }
+            }
 
             override fun onTabUnselected(tab: TabLayout.Tab?) {
                 // Handle tab unselect
             }
         })
     }
+
+
     private fun getScreenSizeCategory(): String {
         return when (resources.configuration.screenLayout
                 and Configuration.SCREENLAYOUT_SIZE_MASK) {
@@ -128,6 +155,7 @@ val widthNav = navigationView.width
             else -> "Error"
         }
     }
+
     private fun getDeviceDensity() {
         val dpiDensity = resources.displayMetrics.densityDpi
         when (dpiDensity) {
