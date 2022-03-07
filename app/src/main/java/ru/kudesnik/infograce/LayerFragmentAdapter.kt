@@ -17,11 +17,15 @@ import ru.kudesnik.infograce.databinding.ItemLayerBinding
 import java.util.*
 
 
-private const val LAYER_SETTINGS = "layer_settings"
+const val LAYER_SETTINGS = "layer_settings"
 private const val SWITCH_CHECKED = "switch_checked"
-private const val SLIDER_VALUE_0 = "SLIDER_VALUE"
-private const val SLIDER_VALUE_1 = "SLIDER_VALUE"
-private const val SLIDER_VALUE_2 = "SLIDER_VALUE"
+const val SLIDER_VALUE_0 = "SLIDER_VALUE_0"
+const val SLIDER_VALUE_1 = "SLIDER_VALUE_1"
+const val SLIDER_VALUE_2 = "SLIDER_VALUE_2"
+
+const val SWITCH_VALUE_0 = "SWITCH_VALUE_0"
+const val SWITCH_VALUE_1 = "SWITCH_VALUE_1"
+const val SWITCH_VALUE_2 = "SWITCH_VALUE_2"
 
 class LayerFragmentAdapter(private val items: List<Item>, private val context: Context) :
     RecyclerView.Adapter<LayerFragmentAdapter.MyViewHolder>() {
@@ -29,6 +33,7 @@ class LayerFragmentAdapter(private val items: List<Item>, private val context: C
 
     //    private lateinit var context:Context
     private var sliderConst = ""
+    private var switchConst = ""
 
     var itemList = listOf<Item>()
         set(value) {
@@ -42,23 +47,21 @@ class LayerFragmentAdapter(private val items: List<Item>, private val context: C
             imageItem.load(R.drawable.item_temp)
 
 //Slider
-            val slider = slider
-            slider.value = getCurrentSlider(item.id).toFloat()
+            slider.value = item.sliderValue.toFloat()
             textViewItemPercent.text = slider.value.toInt().toString()
-            val textItemPercent = textViewItemPercent
             slider.addOnChangeListener { slider, value, fromUser ->
                 setCurrentSlider(value.toInt(), item.id)
-                textItemPercent.text = value.toInt().toString()
+                textViewItemPercent.text = value.toInt().toString()
             }
 //Switch
             val switch = switchItem
-            switchItem.isChecked = getCurrentSwitch()
+            switchItem.isChecked = item.isCheckedSwitch
 
-            switch.setOnCheckedChangeListener { buttonView, isChecked ->
+            switchItem.setOnCheckedChangeListener { buttonView, isChecked ->
                 val check = if (isChecked) "включен" else "выключен"
 
                 Toast.makeText(context, "Переключатель $check", Toast.LENGTH_SHORT).show()
-                setCurrentSwitch(isChecked)
+                setCurrentSwitch(isChecked, item.id)
             }
 //Buttons
             val button1 = itemButton1
@@ -173,33 +176,21 @@ class LayerFragmentAdapter(private val items: List<Item>, private val context: C
         editor.apply()
     }
 
-    private fun getCurrentSlider(position: Int): Int {
-        val sharedPreferences: SharedPreferences = context.getSharedPreferences(
-            LAYER_SETTINGS, AppCompatActivity.MODE_PRIVATE
-        )
-        when (position) {
-            0 -> sliderConst = SLIDER_VALUE_0
-            1 -> sliderConst = SLIDER_VALUE_1
-            2 -> sliderConst = SLIDER_VALUE_2
-        }
-        return (sharedPreferences.getInt(sliderConst, 0))
-    }
-
-    private fun setCurrentSwitch(switchIsChecked: Boolean) {
+     private fun setCurrentSwitch(switchIsChecked: Boolean, position: Int) {
         val sharedPreferences: SharedPreferences = context.getSharedPreferences(
             LAYER_SETTINGS, AppCompatActivity.MODE_PRIVATE
         )
         val editor: SharedPreferences.Editor = sharedPreferences.edit()
-        editor.putBoolean(SWITCH_CHECKED, switchIsChecked)
+         when (position) {
+             0 -> switchConst = SWITCH_VALUE_0
+             1 -> switchConst = SWITCH_VALUE_1
+             2 -> switchConst = SWITCH_VALUE_2
+         }
+        editor.putBoolean(switchConst, switchIsChecked)
         editor.apply()
     }
 
-    private fun getCurrentSwitch(): Boolean {
-        val sharedPreferences: SharedPreferences = context.getSharedPreferences(
-            LAYER_SETTINGS, AppCompatActivity.MODE_PRIVATE
-        )
-        return (sharedPreferences.getBoolean(SWITCH_CHECKED, true))
-    }
+
 
 //    override fun onItemMove(fromPosition: Int, toPosition: Int): Boolean {
 //        if (fromPosition < toPosition) {

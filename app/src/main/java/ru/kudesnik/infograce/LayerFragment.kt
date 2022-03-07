@@ -2,6 +2,7 @@ package ru.kudesnik.infograce
 
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,9 +21,10 @@ import ru.kudesnik.infograce.databinding.FragmentLayerBinding
 3. Сохранение в SharedPreference позиции, и переменных*/
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val LAYER_SETTINGS = "layer_settings"
+//private const val LAYER_SETTINGS = "layer_settings"
 private const val SWITCH_CHECKED = "switch_checked"
 private const val SLIDER_VALUE = "SLIDER_VALUE"
+
 //private const val
 
 open class LayerFragment : Fragment() {
@@ -42,15 +44,11 @@ open class LayerFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val valuesString = listOf<String>(
-            "Слой", "iPhone", "WindowsMobile",
-            "Blackberry", "WebOS", "Ubuntu", "Windows7", "Max OS X",
-            "Linux", "OS/2"
-        )
+
         val items: List<Item> = listOf<Item>(
-            Item(0, "Слой делян", 2, false, 65),
-            Item(1, "Сигналы о лесоизменениях, тестовая выборка с ув-ным шагом", 1, true, 26),
-            Item(2, "Преграды для прохождения огня", 0, true, 0),
+            Item(0, "Слой делян", 2, getCurrentSwitch(0), getCurrentSlider(0)),
+            Item(1, "Сигналы о лесоизменениях, тестовая выборка с ув-ным шагом", 1, getCurrentSwitch(1), getCurrentSlider(1)),
+            Item(2, "Преграды для прохождения огня", 0, getCurrentSwitch(2), getCurrentSlider(2)),
 //            Item(3, "Маска облачности от 02.07.2021", 3),
 //            Item(4, "Маска облачности от 02.07.2021", 4),
 //            Item(5, "Папка со слоями", 5),
@@ -139,10 +137,47 @@ open class LayerFragment : Fragment() {
 //            }
             setupSwipeListener(rw)
 
+testClick.setOnClickListener{
+                Toast.makeText(requireContext(), "Нажата кнопка 3", Toast.LENGTH_SHORT).show()
+
+    for (item in items) {
+
+        Log.d("mytag", item.sliderValue.toString())
+    }
+}
+
+
 
 
             setupClicks()
         }
+    }
+
+
+    private fun getCurrentSlider(position: Int): Int {
+        var sliderConst = ""
+        val sharedPreferences: SharedPreferences = requireContext().getSharedPreferences(
+            LAYER_SETTINGS, AppCompatActivity.MODE_PRIVATE
+        )
+        when (position) {
+            0 -> sliderConst = SLIDER_VALUE_0
+            1 -> sliderConst = SLIDER_VALUE_1
+            2 -> sliderConst = SLIDER_VALUE_2
+        }
+        return (sharedPreferences.getInt(sliderConst, 0))
+    }
+
+    private fun getCurrentSwitch(position: Int): Boolean {
+        var switchConst = ""
+        val sharedPreferences: SharedPreferences = requireContext().getSharedPreferences(
+            LAYER_SETTINGS, AppCompatActivity.MODE_PRIVATE
+        )
+        when (position) {
+            0 -> switchConst = SWITCH_VALUE_0
+            1 -> switchConst = SWITCH_VALUE_1
+            2 -> switchConst = SWITCH_VALUE_2
+        }
+        return (sharedPreferences.getBoolean(switchConst, false))
     }
 
     private fun setupClicks() =

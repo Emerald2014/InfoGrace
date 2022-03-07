@@ -19,6 +19,7 @@ import ru.kudesnik.infograce.databinding.ActivityMainBinding
 import ru.kudesnik.infograce.databinding.FragmentLayerBinding
 
 
+
 class MainActivityK : AppCompatActivity() {
 
     private var _binding: ActivityMainBinding? = null
