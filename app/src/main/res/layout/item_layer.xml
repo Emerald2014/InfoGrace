@@ -65,11 +65,12 @@
                     app:layout_constraintTop_toTopOf="parent">
 
                     <TextView
-                        android:layout_width="wrap_content"
                         android:id="@+id/itemName"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Длинное текстовое поле, чтобы название перенослось на вторую строчку"
-                        android:textColor="@color/white" />
+                        android:textColor="@color/white"
+                        android:textSize="16sp" />
                 </LinearLayout>
 
                 <ImageView
@@ -207,16 +208,16 @@
                     android:layout_marginEnd="12dp"
                     android:layout_marginBottom="7dp"
                     android:orientation="horizontal"
-                    app:layout_constraintHorizontal_chainStyle="packed"
-                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent">
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_chainStyle="packed"
+                    app:layout_constraintStart_toStartOf="parent">
 
                     <ImageView
                         android:id="@+id/itemButton1"
                         android:layout_width="20dp"
-                        android:layout_weight="1"
                         android:layout_height="20dp"
+                        android:layout_weight="1"
                         android:src="@drawable/no_image_50" />
 
                     <ImageView
