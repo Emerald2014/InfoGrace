@@ -1,8 +1,8 @@
 package ru.kudesnik.infograce
 
+import android.annotation.SuppressLint
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,12 +13,15 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ItemTouchHelper.Callback.makeMovementFlags
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.slider.Slider
 import ru.kudesnik.infograce.databinding.FragmentLayerBinding
 
 //Задачи
 /*1. Перетаскивание элементов списка
 2. Сортировка списка по позиции, а не по порядку
-3. Сохранение в SharedPreference позиции, и переменных*/
+3. Сохранение в SharedPreference позиции, и переменных
+4. Разобраться почему фрагменты не полностью подменяют друг друга, и при открытии выезжающей части начинают глючить
+5. Нижнее меню*/
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 //private const val LAYER_SETTINGS = "layer_settings"
@@ -47,7 +50,13 @@ open class LayerFragment : Fragment() {
 
         val items: List<Item> = listOf<Item>(
             Item(0, "Слой делян", 2, getCurrentSwitch(0), getCurrentSlider(0)),
-            Item(1, "Сигналы о лесоизменениях, тестовая выборка с ув-ным шагом", 1, getCurrentSwitch(1), getCurrentSlider(1)),
+            Item(
+                1,
+                "Сигналы о лесоизменениях, тестовая выборка с ув-ным шагом",
+                1,
+                getCurrentSwitch(1),
+                getCurrentSlider(1)
+            ),
             Item(2, "Преграды для прохождения огня", 0, getCurrentSwitch(2), getCurrentSlider(2)),
 //            Item(3, "Маска облачности от 02.07.2021", 3),
 //            Item(4, "Маска облачности от 02.07.2021", 4),
@@ -136,17 +145,42 @@ open class LayerFragment : Fragment() {
 //                Toast.makeText(requireContext(), "Нажата кнопка 3", Toast.LENGTH_SHORT).show()
 //            }
             setupSwipeListener(rw)
+//Slider общий
+            var isCheckedInt = 0
+            for (item in items) {
+                if (item.isCheckedSwitch) isCheckedInt++
+            }
+            var isChecked = when (isCheckedInt) {
+                items.size -> 2
+                0 -> 0
+                else -> 1
+            }
 
-testClick.setOnClickListener{
-                Toast.makeText(requireContext(), "Нажата кнопка 3", Toast.LENGTH_SHORT).show()
+           /* sliderAll.value = isChecked.toFloat()
+            sliderAll.addOnSliderTouchListener(object : Slider.OnSliderTouchListener {
+                @SuppressLint("RestrictedApi")
+                override fun onStartTrackingTouch(slider: Slider) {
+                    TODO("Not yet implemented")
+                }
 
-    for (item in items) {
+                @SuppressLint("RestrictedApi")
+                override fun onStopTrackingTouch(slider: Slider) {
+                    when (slider.value) {
+//                        0 ->  isChecked = false
+//                        2 ->  isChecked = true
+                    }
+                }
 
-        Log.d("mytag", item.sliderValue.toString())
-    }
-}
+            })*/
 
+            testClick.setOnClickListener {
+                Toast.makeText(
+                    requireContext(),
+                    "Переключателей включено: $isChecked",
+                    Toast.LENGTH_SHORT
+                ).show()
 
+            }
 
 
             setupClicks()
@@ -217,65 +251,66 @@ testClick.setOnClickListener{
         val itemTouchHelper = ItemTouchHelper(callback)
         itemTouchHelper.attachToRecyclerView(rw)
     }
-        fun getMovementFlags(
-            recyclerView: RecyclerView?,
-            viewHolder: RecyclerView.ViewHolder?
-        ): Int {
-            val dragFlags = ItemTouchHelper.UP or ItemTouchHelper.DOWN
-            val swipeFlags = ItemTouchHelper.START or ItemTouchHelper.END
-            return makeMovementFlags(dragFlags, swipeFlags)
-        }
 
-        fun isLongPressDragEnabled(): Boolean {
-            return true
-        }
+    fun getMovementFlags(
+        recyclerView: RecyclerView?,
+        viewHolder: RecyclerView.ViewHolder?
+    ): Int {
+        val dragFlags = ItemTouchHelper.UP or ItemTouchHelper.DOWN
+        val swipeFlags = ItemTouchHelper.START or ItemTouchHelper.END
+        return makeMovementFlags(dragFlags, swipeFlags)
+    }
 
-        fun isItemViewSwipeEnabled(): Boolean {
-            return true
-        }
+    fun isLongPressDragEnabled(): Boolean {
+        return true
+    }
 
-        fun setCurrentSlider(sliderValue: Int) {
-            val sharedPreferences: SharedPreferences = requireActivity().getSharedPreferences(
-                LAYER_SETTINGS, AppCompatActivity.MODE_PRIVATE
-            )
-            val editor: SharedPreferences.Editor = sharedPreferences.edit()
-            editor.putInt(SLIDER_VALUE, sliderValue)
-            editor.apply()
-        }
+    fun isItemViewSwipeEnabled(): Boolean {
+        return true
+    }
 
-        fun getCurrentSlider(): Int {
-            val sharedPreferences: SharedPreferences = requireActivity().getSharedPreferences(
-                LAYER_SETTINGS, AppCompatActivity.MODE_PRIVATE
-            )
-            return (sharedPreferences.getInt(SLIDER_VALUE, 0))
-        }
+    fun setCurrentSlider(sliderValue: Int) {
+        val sharedPreferences: SharedPreferences = requireActivity().getSharedPreferences(
+            LAYER_SETTINGS, AppCompatActivity.MODE_PRIVATE
+        )
+        val editor: SharedPreferences.Editor = sharedPreferences.edit()
+        editor.putInt(SLIDER_VALUE, sliderValue)
+        editor.apply()
+    }
 
-        fun setCurrentSwitch(switchIsChecked: Boolean) {
-            val sharedPreferences: SharedPreferences = requireActivity().getSharedPreferences(
-                LAYER_SETTINGS, AppCompatActivity.MODE_PRIVATE
-            )
-            val editor: SharedPreferences.Editor = sharedPreferences.edit()
-            editor.putBoolean(SWITCH_CHECKED, switchIsChecked)
-            editor.apply()
-        }
+    fun getCurrentSlider(): Int {
+        val sharedPreferences: SharedPreferences = requireActivity().getSharedPreferences(
+            LAYER_SETTINGS, AppCompatActivity.MODE_PRIVATE
+        )
+        return (sharedPreferences.getInt(SLIDER_VALUE, 0))
+    }
 
-        fun getCurrentSwitch(): Boolean {
-            val sharedPreferences: SharedPreferences = requireActivity().getSharedPreferences(
-                LAYER_SETTINGS, AppCompatActivity.MODE_PRIVATE
-            )
-            return (sharedPreferences.getBoolean(SWITCH_CHECKED, true))
-        }
+    fun setCurrentSwitch(switchIsChecked: Boolean) {
+        val sharedPreferences: SharedPreferences = requireActivity().getSharedPreferences(
+            LAYER_SETTINGS, AppCompatActivity.MODE_PRIVATE
+        )
+        val editor: SharedPreferences.Editor = sharedPreferences.edit()
+        editor.putBoolean(SWITCH_CHECKED, switchIsChecked)
+        editor.apply()
+    }
 
-        companion object {
+    fun getCurrentSwitch(): Boolean {
+        val sharedPreferences: SharedPreferences = requireActivity().getSharedPreferences(
+            LAYER_SETTINGS, AppCompatActivity.MODE_PRIVATE
+        )
+        return (sharedPreferences.getBoolean(SWITCH_CHECKED, true))
+    }
 
-            fun newInstance() = LayerFragment()
+    companion object {
 
-        }
+        fun newInstance() = LayerFragment()
+
+    }
 
 
 }
 
-    interface ItemTouchHelperAdapter {
-        fun onItemMove(fromPosition: Int, toPosition: Int)
-        fun onItemDismiss(position: Int)
-    }
+interface ItemTouchHelperAdapter {
+    fun onItemMove(fromPosition: Int, toPosition: Int)
+    fun onItemDismiss(position: Int)
+}

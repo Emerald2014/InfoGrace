@@ -31,11 +31,7 @@ class MainActivityK : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val valuesString = listOf<String>(
-            "Android", "iPhone", "WindowsMobile",
-            "Blackberry", "WebOS", "Ubuntu", "Windows7", "Max OS X",
-            "Linux", "OS/2"
-        )
+
 
 //
 //        val recyclerView: RecyclerView = findViewById(R.id.recyclerView)
