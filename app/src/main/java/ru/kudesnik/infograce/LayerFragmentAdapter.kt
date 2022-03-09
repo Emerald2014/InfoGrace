@@ -1,5 +1,6 @@
 package ru.kudesnik.infograce
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Typeface
@@ -16,40 +17,66 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import ru.kudesnik.infograce.databinding.ItemLayerBinding
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 const val LAYER_SETTINGS = "layer_settings"
-private const val SWITCH_CHECKED = "switch_checked"
 const val SLIDER_VALUE_0 = "SLIDER_VALUE_0"
 const val SLIDER_VALUE_1 = "SLIDER_VALUE_1"
 const val SLIDER_VALUE_2 = "SLIDER_VALUE_2"
+const val SLIDER_VALUE_3 = "SLIDER_VALUE_3"
+const val SLIDER_VALUE_4 = "SLIDER_VALUE_4"
+const val SLIDER_VALUE_5 = "SLIDER_VALUE_5"
+const val SLIDER_VALUE_6 = "SLIDER_VALUE_6"
+const val SLIDER_VALUE_7 = "SLIDER_VALUE_7"
+const val SLIDER_VALUE_8 = "SLIDER_VALUE_8"
+const val SLIDER_VALUE_9 = "SLIDER_VALUE_9"
+const val SLIDER_VALUE_10 = "SLIDER_VALUE_10"
+const val SLIDER_VALUE_11 = "SLIDER_VALUE_11"
+const val SLIDER_VALUE_12 = "SLIDER_VALUE_12"
 
 const val SWITCH_VALUE_0 = "SWITCH_VALUE_0"
 const val SWITCH_VALUE_1 = "SWITCH_VALUE_1"
 const val SWITCH_VALUE_2 = "SWITCH_VALUE_2"
+const val SWITCH_VALUE_3 = "SWITCH_VALUE_3"
+const val SWITCH_VALUE_4 = "SWITCH_VALUE_4"
+const val SWITCH_VALUE_5 = "SWITCH_VALUE_5"
+const val SWITCH_VALUE_6 = "SWITCH_VALUE_6"
+const val SWITCH_VALUE_7 = "SWITCH_VALUE_7"
+const val SWITCH_VALUE_8 = "SWITCH_VALUE_8"
+const val SWITCH_VALUE_9 = "SWITCH_VALUE_9"
+const val SWITCH_VALUE_10 = "SWITCH_VALUE_10"
+const val SWITCH_VALUE_11 = "SWITCH_VALUE_11"
+const val SWITCH_VALUE_12 = "SWITCH_VALUE_12"
 
 class LayerFragmentAdapter(
-    private val items: List<Item>,
+//    private val items: List<Item>,
     private val context: Context
 
 ) :
     RecyclerView.Adapter<LayerFragmentAdapter.MyViewHolder>(),
     ItemMoveCallback.ItemTouchHelperContract {
     private lateinit var binding: ItemLayerBinding
-//    val fragmentThis = fragment
-
-    //    private lateinit var context:Context
+    private var itemList= ArrayList<Item>()
+//    private var itemList: List<Item> = mutableListOf()
+//    private val itemForMoved : ArrayList<Item> = itemList.add
+private val itemTest = listOf("1", "2", "3")
     private var sliderConst = ""
     private var switchConst = ""
 
-    var itemList = mutableListOf<Item>()
-        set(value) {
-            field = value
-            notifyDataSetChanged()
-        }
+    @SuppressLint("NotifyDataSetChanged")
+    fun setItems(data: List<Item>) {
+        itemList.addAll(data)
+        notifyDataSetChanged()
+
+    }
+//    var itemList = mutableListOf<Item>()
+//        set(value) {
+//            field = value
+//            notifyDataSetChanged()
+//        }
 
     inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val image = binding.imageItem
 
         fun bind(item: Item, context: Context) = with(binding) {
             itemName.text = item.name
@@ -128,7 +155,7 @@ class LayerFragmentAdapter(
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
 
-        holder.bind(items.sortedBy { it.position }[position], context = context)
+        holder.bind(itemList.sortedBy { it.position }[position], context = context)
 
         setClickListener(holder);
 //
@@ -187,7 +214,7 @@ class LayerFragmentAdapter(
         mOnItemClickListener = listener
     }
 
-    override fun getItemCount(): Int = items.size
+    override fun getItemCount(): Int = itemList.size
 
 
     private fun setCurrentSlider(sliderValue: Int, position: Int) {
@@ -199,6 +226,16 @@ class LayerFragmentAdapter(
             0 -> sliderConst = SLIDER_VALUE_0
             1 -> sliderConst = SLIDER_VALUE_1
             2 -> sliderConst = SLIDER_VALUE_2
+            3 -> sliderConst = SLIDER_VALUE_3
+            4 -> sliderConst = SLIDER_VALUE_4
+            5 -> sliderConst = SLIDER_VALUE_5
+            6 -> sliderConst = SLIDER_VALUE_6
+            7 -> sliderConst = SLIDER_VALUE_7
+            8 -> sliderConst = SLIDER_VALUE_8
+            9 -> sliderConst = SLIDER_VALUE_9
+            10 -> sliderConst = SLIDER_VALUE_10
+            11 -> sliderConst = SLIDER_VALUE_11
+            12 -> sliderConst = SLIDER_VALUE_12
         }
         editor.putInt(sliderConst, sliderValue)
         editor.apply()
@@ -213,16 +250,26 @@ class LayerFragmentAdapter(
             0 -> switchConst = SWITCH_VALUE_0
             1 -> switchConst = SWITCH_VALUE_1
             2 -> switchConst = SWITCH_VALUE_2
+            3 -> switchConst = SWITCH_VALUE_3
+            4 -> switchConst = SWITCH_VALUE_4
+            5 -> switchConst = SWITCH_VALUE_5
+            6 -> switchConst = SWITCH_VALUE_6
+            7 -> switchConst = SWITCH_VALUE_7
+            8 -> switchConst = SWITCH_VALUE_8
+            9 -> switchConst = SWITCH_VALUE_9
+            10 -> switchConst = SWITCH_VALUE_10
+            11 -> switchConst = SWITCH_VALUE_11
+            12 -> switchConst = SWITCH_VALUE_12
         }
         editor.putBoolean(switchConst, switchIsChecked)
         editor.apply()
     }
 
-    fun onItemMove(fromPosition: Int, toPosition: Int) {
-        val prev: Item = itemList.removeAt(fromPosition)
-        itemList.add(if (toPosition > fromPosition) toPosition - 1 else toPosition, prev)
-        notifyItemMoved(fromPosition, toPosition)
-    }
+//    fun onItemMove(fromPosition: Int, toPosition: Int) {
+//        val prev: Item = itemList.removeAt(fromPosition)
+//        itemList.add(if (toPosition > fromPosition) toPosition - 1 else toPosition, prev)
+//        notifyItemMoved(fromPosition, toPosition)
+//    }
 //     fun onItemMove(fromPosition: Int, toPosition: Int): Boolean {
 //        if (fromPosition < toPosition) {
 //            for (i in fromPosition until toPosition) {
@@ -239,19 +286,19 @@ class LayerFragmentAdapter(
 
     //    val items2 = listOf<String>("1", "2")
 //
-    fun onItemDismiss(position: Int) {
-        itemList.removeAt(position);
-        notifyItemRemoved(position);
-    }
+//    fun onItemDismiss(position: Int) {
+//        itemList.removeAt(position);
+//        notifyItemRemoved(position);
+//    }
 
     override fun onRowMoved(fromPosition: Int, toPosition: Int) {
         if (fromPosition < toPosition) {
             for (i in fromPosition until toPosition) {
-                Collections.swap(items, i, i + 1)
+                Collections.swap(itemList, i, i + 1)
             }
         } else {
             for (i in fromPosition downTo toPosition + 1) {
-                Collections.swap(items, i, i - 1)
+                Collections.swap(itemList, i, i - 1)
             }
         }
         notifyItemMoved(fromPosition, toPosition)

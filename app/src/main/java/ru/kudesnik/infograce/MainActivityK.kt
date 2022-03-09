@@ -25,7 +25,11 @@ class MainActivityK : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_without_drawer)
 
-
+//        if (savedInstanceState == null) {
+//            supportFragmentManager.beginTransaction()
+//                .replace(R.id.containerDrawer, LayerFragment.newInstance())
+//                .commitNow()
+//        }
 
 
 //
@@ -34,11 +38,7 @@ class MainActivityK : AppCompatActivity() {
 //        recyclerView.adapter = LayerFragmentAdapter(valuesString)
 
 
-//        if (savedInstanceState == null) {
-//            supportFragmentManager.beginTransaction()
-//                .replace(R.id.container, LayerFragment.newInstance())
-//                .commitNow()
-//        }
+
 
 //        val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
         // Поиск navigation view
