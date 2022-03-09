@@ -2,22 +2,16 @@ package ru.kudesnik.infograce
 
 
 import android.content.res.Configuration
-import android.graphics.Point
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.util.Log
-import android.view.Display
 import android.view.View
-import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
-import androidx.cardview.widget.CardView
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.navigation.NavigationView
 import com.google.android.material.tabs.TabLayout
 import ru.kudesnik.infograce.databinding.ActivityMainBinding
-import ru.kudesnik.infograce.databinding.FragmentLayerBinding
-
 
 
 class MainActivityK : AppCompatActivity() {
@@ -29,7 +23,8 @@ class MainActivityK : AppCompatActivity() {
     //Ширина экрана - 1080, шторка на 391dp закрывает полностью экран
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_without_drawer)
+
 
 
 
@@ -47,29 +42,29 @@ class MainActivityK : AppCompatActivity() {
 
 //        val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
         // Поиск navigation view
-        val navigationView = findViewById<View>(R.id.navigationView) as NavigationView
+//        val navigationView = findViewById<View>(R.id.navigationView) as NavigationView
 // Раздуть header view во время выполнения
 // Раздуть header view во время выполнения
-        val headerLayout: View = navigationView.inflateHeaderView(R.layout.header_navigation_drawer)
+//        val headerLayout: View = navigationView.inflateHeaderView(R.layout.header_navigation_drawer)
 // Теперь, при необходимости, мы можем найти элементы внутри
 // header'а
-        val widthNav = navigationView.width
-        val display: Display = windowManager.defaultDisplay
-        val point = Point()
-        display.getSize(point)
-        val screenWidth: Int = point.x
-        val screenHeight: Int = point.y
+//        val widthNav = navigationView.width
+//        val display: Display = windowManager.defaultDisplay
+//        val point = Point()
+//        display.getSize(point)
+//        val screenWidth: Int = point.x
+//        val screenHeight: Int = point.y
 
 // Теперь получим необходимую информацию
-        val width = Integer.toString(screenWidth)
-        val height = Integer.toString(screenHeight)
-
-        val info = "Ширина: $width; Высота: $height"
-
-        Log.i("ScreenInfo", info)
-        Log.i("ScreenInfo", getScreenSizeCategory())
-        Log.i("ScreenInfo", widthNav.toString())
-        getDeviceDensity()
+//        val width = Integer.toString(screenWidth)
+//        val height = Integer.toString(screenHeight)
+//
+//        val info = "Ширина: $width; Высота: $height"
+//
+//        Log.i("ScreenInfo", info)
+//        Log.i("ScreenInfo", getScreenSizeCategory())
+//        Log.i("ScreenInfo", widthNav.toString())
+//        getDeviceDensity()
 
 
 //        val cardView = headerLayout.findViewById<CardView?>(R.id.base_cardview)
@@ -91,7 +86,8 @@ class MainActivityK : AppCompatActivity() {
 //                arrow.setImageResource(R.drawable.ic_baseline_keyboard_arrow_down_24)
 //            }
 //        }
-        val tabLayout = headerLayout.findViewById<TabLayout>(R.id.tabLayout)
+        val tabLayout = findViewById<TabLayout>(R.id.tabLayout)
+//        val tabLayout = headerLayout.findViewById<TabLayout>(R.id.tabLayout)
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
 
             override fun onTabSelected(tab: TabLayout.Tab?) {
@@ -164,4 +160,6 @@ class MainActivityK : AppCompatActivity() {
             DisplayMetrics.DENSITY_XXXHIGH -> Log.i("Density", "DENSITY_XXXHIGH")
         }
     }
+
+
 }

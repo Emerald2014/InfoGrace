@@ -10,7 +10,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.ItemTouchHelper.Callback.makeMovementFlags
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.slider.Slider
@@ -18,10 +17,12 @@ import ru.kudesnik.infograce.databinding.FragmentLayerBinding
 
 //Задачи
 /*1. Перетаскивание элементов списка
-2. Сортировка списка по позиции, а не по порядку
-3. Сохранение в SharedPreference позиции, и переменных
+2+. Сортировка списка по позиции, а не по порядку
+3+. Сохранение в SharedPreference позиции, и переменных
 4. Разобраться почему фрагменты не полностью подменяют друг друга, и при открытии выезжающей части начинают глючить
-5. Нижнее меню*/
+5. Нижнее меню
+6. Разобраться почему нижнее меню не привязано к низу экрана
+7. Добавить вью модель для оперативного обновления данных во вью*/
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 //private const val LAYER_SETTINGS = "layer_settings"
@@ -33,7 +34,10 @@ private const val SLIDER_VALUE = "SLIDER_VALUE"
 open class LayerFragment : Fragment() {
     private var _binding: FragmentLayerBinding? = null
     private val binding get() = _binding!!
-    private var adapter: LayerFragmentAdapter? = null
+    private var adapterLayer: LayerFragmentAdapter? = null
+    private var adapterLayerTest: LayerFragmentAdapterTest? = null
+    lateinit var mItemTouchHelper: ItemTouchHelper
+    var recyclerViewVer2: RecyclerView? = null
 
 
     override fun onCreateView(
@@ -48,6 +52,8 @@ open class LayerFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val itemTest = listOf(1, 2, 3, 4)
+
         val items: List<Item> = listOf<Item>(
             Item(0, "Слой делян", 2, getCurrentSwitch(0), getCurrentSlider(0)),
             Item(
@@ -57,6 +63,11 @@ open class LayerFragment : Fragment() {
                 getCurrentSwitch(1),
                 getCurrentSlider(1)
             ),
+            Item(2, "Преграды для прохождения огня", 0, getCurrentSwitch(2), getCurrentSlider(2)),
+            Item(2, "Преграды для прохождения огня", 0, getCurrentSwitch(2), getCurrentSlider(2)),
+            Item(2, "Преграды для прохождения огня", 0, getCurrentSwitch(2), getCurrentSlider(2)),
+            Item(2, "Преграды для прохождения огня", 0, getCurrentSwitch(2), getCurrentSlider(2)),
+            Item(2, "Преграды для прохождения огня", 0, getCurrentSwitch(2), getCurrentSlider(2)),
             Item(2, "Преграды для прохождения огня", 0, getCurrentSwitch(2), getCurrentSlider(2)),
 //            Item(3, "Маска облачности от 02.07.2021", 3),
 //            Item(4, "Маска облачности от 02.07.2021", 4),
@@ -69,6 +80,7 @@ open class LayerFragment : Fragment() {
 //            Item(11, "Маска облачности от 02.07.2021", 1),
 //            Item(12, "Маска облачности от 02.07.2021", 12),
         )
+
 
 //        val adapter:ListAdapter =
 //            ArrayAdapter(requireContext(), R.layout.item_layer, R.id.itemName, valuesString)
@@ -85,13 +97,49 @@ open class LayerFragment : Fragment() {
 //        val ivHeaderPhoto: ImageView = headerLayout.findViewById(R.id.imageView)
 
         with(binding) {
+recyclerViewVer2 = recyclerViewLayer
+            recyclerViewLayer.layoutManager = LinearLayoutManager(requireContext())
+
+            adapterLayer = LayerFragmentAdapter(items, requireContext())
+            val callback: ItemTouchHelper.Callback = ItemMoveCallback(adapterLayer)
+            val touchHelper = ItemTouchHelper(callback)
+            touchHelper.attachToRecyclerView(recyclerViewVer2)
+            recyclerViewVer2!!.adapter = adapterLayer
+
 //            val cardView = included.baseCardView
 //            val arrow = included.arrowButton
 //            val hiddenView = included.hiddenView
 //            val listView2 = listView
-            val rw: RecyclerView = recyclerView
-            recyclerView.layoutManager = LinearLayoutManager(requireContext())
-            recyclerView.adapter = LayerFragmentAdapter(items, requireContext())
+
+//            val rw: RecyclerView = recyclerViewLayer
+//            recyclerViewLayer.adapter = LayerFragmentAdapter(items, requireContext())
+//
+//recyclerViewLayerTest.layoutManager = LinearLayoutManager(requireContext())
+//            recyclerViewLayerTest.adapter = LayerFragmentAdapterTest(itemTest, requireContext())
+
+
+//            adapterLayer = LayerFragmentAdapter(items, requireContext())
+
+//            val rw: RecyclerView = recyclerView
+//            val rwAdap = LayerFragmentAdapter(items, requireContext(), this@LayerFragment)
+
+
+//            val callbackTest: ItemTouchHelper.Callback = ItemMoveCallback(adapterLayerTest)
+//            val touchHelperTest = ItemTouchHelper(callbackTest)
+//            touchHelperTest.attachToRecyclerView(recyclerViewLayerTest)
+
+
+//            rw.adapter = rwAdap
+//            recyclerViewLayer.adapter = adapterLayer
+//            val rwAdapter = recyclerView.adapter
+//            recyclerView.layoutManager = LinearLayoutManager(requireContext())
+
+
+//            val callback = SimpleItemTouchHelperCallback(adapter)
+//            mItemTouchHelper = ItemTouchHelper(callback)
+//            mItemTouchHelper.attachToRecyclerView(rw)
+
+
 
 //            listView2.setBackgroundColor(resources.getColor(R.color.purple_200))
 //            listView.adapter = adapter
@@ -144,7 +192,7 @@ open class LayerFragment : Fragment() {
 //            button3.setOnClickListener {
 //                Toast.makeText(requireContext(), "Нажата кнопка 3", Toast.LENGTH_SHORT).show()
 //            }
-            setupSwipeListener(rw)
+//            setupSwipeListener(rw)
 //Slider общий
             var isCheckedInt = 0
             for (item in items) {
@@ -156,7 +204,7 @@ open class LayerFragment : Fragment() {
                 else -> 1
             }
 
-           /* sliderAll.value = isChecked.toFloat()
+            sliderAll.value = isChecked.toFloat()
             sliderAll.addOnSliderTouchListener(object : Slider.OnSliderTouchListener {
                 @SuppressLint("RestrictedApi")
                 override fun onStartTrackingTouch(slider: Slider) {
@@ -171,7 +219,7 @@ open class LayerFragment : Fragment() {
                     }
                 }
 
-            })*/
+            })
 
             testClick.setOnClickListener {
                 Toast.makeText(
@@ -183,7 +231,7 @@ open class LayerFragment : Fragment() {
             }
 
 
-            setupClicks()
+//            setupClicks()
         }
     }
 
@@ -214,60 +262,64 @@ open class LayerFragment : Fragment() {
         return (sharedPreferences.getBoolean(switchConst, false))
     }
 
-    private fun setupClicks() =
-        adapter?.setOnItemClickListener(object : LayerFragmentAdapter.OnItemClickListener {
-            override fun onItemClick(view: View?, position: Int) {
-                Toast.makeText(requireContext(), "Click $position", Toast.LENGTH_SHORT).show()
+    //    private fun setupClicks() =
+//        adapter?.setOnItemClickListener(object : LayerFragmentAdapter.OnItemClickListener {
+//            override fun onItemClick(view: View?, position: Int) {
+//                Toast.makeText(requireContext(), "Click $position", Toast.LENGTH_SHORT).show()
+//
+//            }
+//
+//            override fun onItemLongClick(view: View?, position: Int) {
+//                Toast.makeText(requireContext(), "Long Click $position", Toast.LENGTH_SHORT).show()
+//
+//            }
+//        })
+//    open fun onStartDrag(viewHolder: RecyclerView.ViewHolder?) {
+//        if (viewHolder != null) {
+//            mItemTouchHelper.startDrag(viewHolder)
+//        }
+//    }
 
-            }
+//    private fun setupSwipeListener(rw: RecyclerView) {
+//        val callback = object : ItemTouchHelper.SimpleCallback(
+//            0,
+//            ItemTouchHelper.LEFT or ItemTouchHelper.UP
+//        ) {
+//
+//            override fun onMove(
+//                recyclerView: RecyclerView,
+//                viewHolder: RecyclerView.ViewHolder,
+//                target: RecyclerView.ViewHolder
+//            ): Boolean {
+//                return false
+//            }
+//
+//            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+//                val item = adapter?.itemList?.get(viewHolder.adapterPosition)
+//                Toast.makeText(requireContext(), "Swipe $item", Toast.LENGTH_SHORT).show()
+////                viewModel.deleteShopItem(item)
+//            }
+//        }
+//        val itemTouchHelper = ItemTouchHelper(callback)
+//        itemTouchHelper.attachToRecyclerView(rw)
+//    }
 
-            override fun onItemLongClick(view: View?, position: Int) {
-                Toast.makeText(requireContext(), "Long Click $position", Toast.LENGTH_SHORT).show()
-
-            }
-        })
-
-
-    private fun setupSwipeListener(rw: RecyclerView) {
-        val callback = object : ItemTouchHelper.SimpleCallback(
-            0,
-            ItemTouchHelper.LEFT or ItemTouchHelper.UP
-        ) {
-
-            override fun onMove(
-                recyclerView: RecyclerView,
-                viewHolder: RecyclerView.ViewHolder,
-                target: RecyclerView.ViewHolder
-            ): Boolean {
-                return false
-            }
-
-            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                val item = adapter?.itemList?.get(viewHolder.adapterPosition)
-                Toast.makeText(requireContext(), "Swipe $item", Toast.LENGTH_SHORT).show()
-//                viewModel.deleteShopItem(item)
-            }
-        }
-        val itemTouchHelper = ItemTouchHelper(callback)
-        itemTouchHelper.attachToRecyclerView(rw)
-    }
-
-    fun getMovementFlags(
-        recyclerView: RecyclerView?,
-        viewHolder: RecyclerView.ViewHolder?
-    ): Int {
-        val dragFlags = ItemTouchHelper.UP or ItemTouchHelper.DOWN
-        val swipeFlags = ItemTouchHelper.START or ItemTouchHelper.END
-        return makeMovementFlags(dragFlags, swipeFlags)
-    }
-
-    fun isLongPressDragEnabled(): Boolean {
-        return true
-    }
-
-    fun isItemViewSwipeEnabled(): Boolean {
-        return true
-    }
+//    fun getMovementFlags(
+//        recyclerView: RecyclerView?,
+//        viewHolder: RecyclerView.ViewHolder?
+//    ): Int {
+//        val dragFlags = ItemTouchHelper.UP or ItemTouchHelper.DOWN
+//        val swipeFlags = ItemTouchHelper.START or ItemTouchHelper.END
+//        return makeMovementFlags(dragFlags, swipeFlags)
+//    }
+//
+//    fun isLongPressDragEnabled(): Boolean {
+//        return true
+//    }
+//
+//    fun isItemViewSwipeEnabled(): Boolean {
+//        return true
+//    }
 
     fun setCurrentSlider(sliderValue: Int) {
         val sharedPreferences: SharedPreferences = requireActivity().getSharedPreferences(

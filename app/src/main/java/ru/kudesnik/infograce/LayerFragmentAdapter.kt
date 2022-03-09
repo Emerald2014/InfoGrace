@@ -6,11 +6,12 @@ import android.graphics.Typeface
 import android.transition.AutoTransition
 import android.transition.TransitionManager
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
+import android.view.View.OnTouchListener
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import ru.kudesnik.infograce.databinding.ItemLayerBinding
@@ -27,21 +28,29 @@ const val SWITCH_VALUE_0 = "SWITCH_VALUE_0"
 const val SWITCH_VALUE_1 = "SWITCH_VALUE_1"
 const val SWITCH_VALUE_2 = "SWITCH_VALUE_2"
 
-class LayerFragmentAdapter(private val items: List<Item>, private val context: Context) :
-    RecyclerView.Adapter<LayerFragmentAdapter.MyViewHolder>() {
+class LayerFragmentAdapter(
+    private val items: List<Item>,
+    private val context: Context
+
+) :
+    RecyclerView.Adapter<LayerFragmentAdapter.MyViewHolder>(),
+    ItemMoveCallback.ItemTouchHelperContract {
     private lateinit var binding: ItemLayerBinding
+//    val fragmentThis = fragment
 
     //    private lateinit var context:Context
     private var sliderConst = ""
     private var switchConst = ""
 
-    var itemList = listOf<Item>()
+    var itemList = mutableListOf<Item>()
         set(value) {
             field = value
             notifyDataSetChanged()
         }
 
     inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val image = binding.imageItem
+
         fun bind(item: Item, context: Context) = with(binding) {
             itemName.text = item.name
             imageItem.load(R.drawable.item_temp)
@@ -122,7 +131,26 @@ class LayerFragmentAdapter(private val items: List<Item>, private val context: C
         holder.bind(items.sortedBy { it.position }[position], context = context)
 
         setClickListener(holder);
+//
+//        holder.image.setOnTouchListener(OnTouchListener { v, event ->
+//            if (event.actionMasked === MotionEvent.ACTION_DOWN) {
+//                fragmentThis.onStartDrag(holder)
+//            }
+//            false
+//        })
+
     }
+
+//    fun onItemDismiss(position: Int) {
+//       items.remove(position)
+//        notifyItemRemoved(position)
+//    }
+//
+//    fun onItemMove(fromPosition: Int, toPosition: Int) {
+//        val prev: String = items.remove(fromPosition)
+//        mItems.add(if (toPosition > fromPosition) toPosition - 1 else toPosition, prev)
+//        notifyItemMoved(fromPosition, toPosition)
+//    }
 
     // Настраиваем мониторинг кликов
     private fun setClickListener(viewHolder: MyViewHolder) {
@@ -176,23 +204,26 @@ class LayerFragmentAdapter(private val items: List<Item>, private val context: C
         editor.apply()
     }
 
-     private fun setCurrentSwitch(switchIsChecked: Boolean, position: Int) {
+    private fun setCurrentSwitch(switchIsChecked: Boolean, position: Int) {
         val sharedPreferences: SharedPreferences = context.getSharedPreferences(
             LAYER_SETTINGS, AppCompatActivity.MODE_PRIVATE
         )
         val editor: SharedPreferences.Editor = sharedPreferences.edit()
-         when (position) {
-             0 -> switchConst = SWITCH_VALUE_0
-             1 -> switchConst = SWITCH_VALUE_1
-             2 -> switchConst = SWITCH_VALUE_2
-         }
+        when (position) {
+            0 -> switchConst = SWITCH_VALUE_0
+            1 -> switchConst = SWITCH_VALUE_1
+            2 -> switchConst = SWITCH_VALUE_2
+        }
         editor.putBoolean(switchConst, switchIsChecked)
         editor.apply()
     }
 
-
-
-//    override fun onItemMove(fromPosition: Int, toPosition: Int): Boolean {
+    fun onItemMove(fromPosition: Int, toPosition: Int) {
+        val prev: Item = itemList.removeAt(fromPosition)
+        itemList.add(if (toPosition > fromPosition) toPosition - 1 else toPosition, prev)
+        notifyItemMoved(fromPosition, toPosition)
+    }
+//     fun onItemMove(fromPosition: Int, toPosition: Int): Boolean {
 //        if (fromPosition < toPosition) {
 //            for (i in fromPosition until toPosition) {
 //                Collections.swap(items, i, i + 1)
@@ -206,12 +237,27 @@ class LayerFragmentAdapter(private val items: List<Item>, private val context: C
 //        return true
 //    }
 
-//    val items2 = listOf<String>("1", "2")
+    //    val items2 = listOf<String>("1", "2")
 //
-//    override fun onItemDismiss(position: Int) {
-//        items2.remove(position);
-//        notifyItemRemoved(position);
-//    }
+    fun onItemDismiss(position: Int) {
+        itemList.removeAt(position);
+        notifyItemRemoved(position);
+    }
+
+    override fun onRowMoved(fromPosition: Int, toPosition: Int) {
+        if (fromPosition < toPosition) {
+            for (i in fromPosition until toPosition) {
+                Collections.swap(items, i, i + 1)
+            }
+        } else {
+            for (i in fromPosition downTo toPosition + 1) {
+                Collections.swap(items, i, i - 1)
+            }
+        }
+        notifyItemMoved(fromPosition, toPosition)
+    }
+
+
 }
 
 
