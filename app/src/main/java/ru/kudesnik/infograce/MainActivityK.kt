@@ -120,6 +120,7 @@ class MainActivityK : AppCompatActivity() {
                     1 -> {
                         supportFragmentManager.beginTransaction()
                             .replace(R.id.containerDrawer, BackgroundFragment.newInstance())
+
                             .commitNow()
                     }
                     2 -> {

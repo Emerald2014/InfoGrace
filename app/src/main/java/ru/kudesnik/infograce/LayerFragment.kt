@@ -1,20 +1,18 @@
 package ru.kudesnik.infograce
 
-import android.annotation.SuppressLint
-import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.slider.Slider
 import ru.kudesnik.infograce.databinding.FragmentLayerBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import ru.kudesnik.infograce.model.AppState
+import ru.kudesnik.infograce.model.Item
+import ru.kudesnik.infograce.repository.RepositoryImpl
 
 
 /*Задачи
@@ -35,53 +33,55 @@ open class LayerFragment : Fragment() {
     private val binding get() = _binding!!
     private var adapterLayer: LayerFragmentAdapter? = null
     private var recyclerViewVer2: RecyclerView? = null
-
-    val items: List<Item> = listOf(
-        Item(0, "Слой делян", 2, false, 0),
-        Item(
-            1,
-            "Сигналы о лесоизменениях, тестовая выборка с ув-ным шагом",
-            1,
-            false,
-            1
-        ),
-        Item(2, "Преграды для прохождения огня", 0, false, 2),)
-        /*
-        Item(3, "Маска облачности от 02.07.2021", 3, getCurrentSwitch(3), getCurrentSlider(3)),
-        Item(4, "Маска облачности от 02.07.2021", 4, getCurrentSwitch(4), getCurrentSlider(4)),
-        Item(5, "Папка со слоями", 5, getCurrentSwitch(5), getCurrentSlider(5)),
-        Item(
-            6,
-            "Сигналы о лесоизменениях, тестовая выборка с ув-ным шагом",
-            6,
-            getCurrentSwitch(6),
-            getCurrentSlider(6)
-        ),
-        Item(7, "Преграды для прохождения огня", 7, getCurrentSwitch(7), getCurrentSlider(7)),
-        Item(8, "Контуры гарей", 8, getCurrentSwitch(8), getCurrentSlider(7)),
-        Item(9, "Маска облачности от 02.07.2021", 9, getCurrentSwitch(9), getCurrentSlider(9)),
-        Item(
-            10,
-            "Маска облачности от 02.07.2021",
-            10,
-            getCurrentSwitch(10),
-            getCurrentSlider(10)
-        ),
-        Item(
-            11,
-            "Маска облачности от 02.07.2021",
-            11,
-            getCurrentSwitch(11),
-            getCurrentSlider(11)
-        ),
-        Item(
-            12,
-            "Маска облачности от 02.07.2021",
-            12,
-            getCurrentSwitch(12),
-            getCurrentSlider(12)
-        ),
-    )*/
+    private val repository = RepositoryImpl()
+    lateinit var items2: List<Item>
+//    val items: List<Item> = listOf(
+//        Item(0, "Слой делян", 2, false, 0),
+//        Item(
+//            1,
+//            "Сигналы о лесоизменениях, тестовая выборка с ув-ным шагом",
+//            1,
+//            false,
+//            1
+//        ),
+//        Item(2, "Преграды для прохождения огня", 0, false, 2),
+//    )
+    /*
+    Item(3, "Маска облачности от 02.07.2021", 3, getCurrentSwitch(3), getCurrentSlider(3)),
+    Item(4, "Маска облачности от 02.07.2021", 4, getCurrentSwitch(4), getCurrentSlider(4)),
+    Item(5, "Папка со слоями", 5, getCurrentSwitch(5), getCurrentSlider(5)),
+    Item(
+        6,
+        "Сигналы о лесоизменениях, тестовая выборка с ув-ным шагом",
+        6,
+        getCurrentSwitch(6),
+        getCurrentSlider(6)
+    ),
+    Item(7, "Преграды для прохождения огня", 7, getCurrentSwitch(7), getCurrentSlider(7)),
+    Item(8, "Контуры гарей", 8, getCurrentSwitch(8), getCurrentSlider(7)),
+    Item(9, "Маска облачности от 02.07.2021", 9, getCurrentSwitch(9), getCurrentSlider(9)),
+    Item(
+        10,
+        "Маска облачности от 02.07.2021",
+        10,
+        getCurrentSwitch(10),
+        getCurrentSlider(10)
+    ),
+    Item(
+        11,
+        "Маска облачности от 02.07.2021",
+        11,
+        getCurrentSwitch(11),
+        getCurrentSlider(11)
+    ),
+    Item(
+        12,
+        "Маска облачности от 02.07.2021",
+        12,
+        getCurrentSwitch(12),
+        getCurrentSlider(12)
+    ),
+)*/
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -94,7 +94,7 @@ open class LayerFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        items2 = repository.getItems(requireContext())
 
 //        val adapter:ListAdapter =
 //            ArrayAdapter(requireContext(), R.layout.item_layer, R.id.itemName, valuesString)
@@ -111,20 +111,28 @@ open class LayerFragment : Fragment() {
 //        val ivHeaderPhoto: ImageView = headerLayout.findViewById(R.id.imageView)
 
         with(binding) {
+//Вот так все работает без ViewModel
             recyclerViewVer2 = recyclerViewLayer
-
             recyclerViewLayer.adapter = adapterLayer
-//            recyclerViewVer2!!.adapter = adapterLayer
-//            viewModel.getItems(requireContext())
-//            viewModel.getLiveData().observe(viewLifecycleOwner) { renderData(it) }
-
-            adapterLayer = LayerFragmentAdapter(requireContext()).apply { setItems(items) }
+            adapterLayer = LayerFragmentAdapter(requireContext()).apply { setItems(items2) }
             recyclerViewLayer.adapter = adapterLayer
-
-//            adapterLayer = LayerFragmentAdapter(items, requireContext())
             val callback: ItemTouchHelper.Callback = ItemMoveCallback(adapterLayer)
             val touchHelper = ItemTouchHelper(callback)
             touchHelper.attachToRecyclerView(recyclerViewVer2)
+//Конец кода
+//А так работает с ViewModel
+//            recyclerViewVer2 = recyclerViewLayer
+//            recyclerViewLayer.adapter = adapterLayer
+//            viewModel.getItems(requireContext())
+//            viewModel.getLiveData().observe(viewLifecycleOwner) { renderData(it) }
+//            val callback: ItemTouchHelper.Callback = ItemMoveCallback(adapterLayer)
+//            val touchHelper = ItemTouchHelper(callback)
+//            touchHelper.attachToRecyclerView(recyclerViewVer2)
+//Конец кода
+//            recyclerViewVer2!!.adapter = adapterLayer
+
+
+//            adapterLayer = LayerFragmentAdapter(items, requireContext())
 
 
 //            val cardView = included.baseCardView
@@ -241,14 +249,7 @@ open class LayerFragment : Fragment() {
 //
 //            })
 
-//            testClick.setOnClickListener {
-//                Toast.makeText(
-//                    requireContext(),
-//                    "Переключателей включено: $isChecked",
-//                    Toast.LENGTH_SHORT
-//                ).show()
-//
-//            }
+
 
 
 //            setupClicks()
@@ -265,6 +266,7 @@ open class LayerFragment : Fragment() {
             is AppState.Success -> {
                 adapterLayer = LayerFragmentAdapter(requireContext()).apply {
                     setItems(appState.modelData)
+
                 }
                 recyclerViewLayer.adapter = adapterLayer
             }
@@ -273,10 +275,6 @@ open class LayerFragment : Fragment() {
 
         }
     }
-
-
-
-
 
 
     //    private fun setupClicks() =

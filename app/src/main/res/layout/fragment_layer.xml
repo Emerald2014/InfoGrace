@@ -6,35 +6,16 @@
     android:id="@+id/layerFragmentRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/purple_500"
-    tools:context=".LayerFragment">
+    android:background="@color/purple_500">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewLayer"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:background="@color/teal_700"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/testClick"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Проверка"
-        android:textColor="@color/purple_500"
-        android:textSize="30sp"
-        app:layout_constraintBottom_toTopOf="@id/side_menu_l"
-        app:layout_constraintTop_toBottomOf="@id/recyclerViewLayer" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewLayerTest"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#ED3110"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/testClick" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/side_menu_l"
@@ -43,8 +24,8 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:background="@drawable/side_menu_l"
         android:layout_gravity="bottom"
+        android:background="@drawable/side_menu_l"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -69,8 +50,9 @@
             android:layout_marginEnd="68dp"
             android:src="@drawable/ic_baseline_drag_handle_24"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            android:contentDescription="@string/image_to_drop" />
 
         <com.google.android.material.slider.Slider
             android:id="@+id/sliderAll"

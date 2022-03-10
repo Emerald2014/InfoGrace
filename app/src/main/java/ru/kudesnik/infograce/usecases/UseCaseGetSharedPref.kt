@@ -3,7 +3,7 @@ package ru.kudesnik.infograce.usecases
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
-import ru.kudesnik.infograce.*
+import ru.kudesnik.infograce.model.*
 
 class UseCaseGetSharedPref {
     fun getCurrentSlider(position: Int, context: Context): Int {
@@ -50,5 +50,51 @@ class UseCaseGetSharedPref {
             12 -> switchConst = SWITCH_VALUE_12
         }
         return (sharedPreferences.getBoolean(switchConst, false))
+    }
+
+    fun getCurrentPosition(position: Int, context: Context): Int {
+        var positionConst = ""
+        val sharedPreferences: SharedPreferences = context.getSharedPreferences(
+            LAYER_SETTINGS, AppCompatActivity.MODE_PRIVATE
+        )
+        when (position) {
+            0 -> positionConst = SLIDER_POSITION_0
+            1 -> positionConst = SLIDER_POSITION_1
+            2 -> positionConst = SLIDER_POSITION_2
+            3 -> positionConst = SLIDER_POSITION_3
+            4 -> positionConst = SLIDER_POSITION_4
+            5 -> positionConst = SLIDER_POSITION_5
+            6 -> positionConst = SLIDER_POSITION_6
+            7 -> positionConst = SLIDER_POSITION_7
+            8 -> positionConst = SLIDER_POSITION_8
+            9 -> positionConst = SLIDER_POSITION_9
+            10 -> positionConst = SLIDER_POSITION_10
+            11 -> positionConst = SLIDER_POSITION_11
+            12 -> positionConst = SLIDER_POSITION_12
+        }
+        return (sharedPreferences.getInt(positionConst, 0))
+    }
+
+    fun getImage(position: Int, context: Context): Int {
+        var imageLink = 0
+        val sharedPreferences: SharedPreferences = context.getSharedPreferences(
+            LAYER_SETTINGS, AppCompatActivity.MODE_PRIVATE
+        )
+        when (position) {
+            0 -> imageLink = IMAGE_0
+            1 -> imageLink = IMAGE_1
+            2 -> imageLink = IMAGE_2
+            3 -> imageLink = IMAGE_3
+            4 -> imageLink = IMAGE_4
+            5 -> imageLink = IMAGE_5
+            6 -> imageLink = IMAGE_6
+            7 -> imageLink = IMAGE_7
+            8 -> imageLink = IMAGE_8
+            9 -> imageLink = IMAGE_9
+            10 -> imageLink = IMAGE_10
+            11 -> imageLink = IMAGE_11
+            12 -> imageLink = IMAGE_12
+        }
+        return (sharedPreferences.getInt(imageLink.toString(), 0))
     }
 }

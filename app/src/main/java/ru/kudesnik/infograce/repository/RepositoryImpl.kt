@@ -1,12 +1,12 @@
 package ru.kudesnik.infograce.repository
 
 import android.content.Context
-import ru.kudesnik.infograce.Item
+import ru.kudesnik.infograce.R
+import ru.kudesnik.infograce.model.Item
 import ru.kudesnik.infograce.usecases.UseCaseGetSharedPref
-import java.text.FieldPosition
 
 class RepositoryImpl : Repository {
-    val myUseCase: UseCaseGetSharedPref = UseCaseGetSharedPref()
+    private val myUseCase: UseCaseGetSharedPref = UseCaseGetSharedPref()
     override fun getItems(context: Context): List<Item> {
 
 
@@ -14,93 +14,110 @@ class RepositoryImpl : Repository {
             Item(
                 0,
                 "Слой делян",
-                2,
+                myUseCase.getCurrentPosition(0, context),
                 myUseCase.getCurrentSwitch(0, context),
-                myUseCase.getCurrentSlider(0, context)
+                myUseCase.getCurrentSlider(0, context),
+                R.drawable.ic_item_0
             ),
             Item(
                 1,
                 "Сигналы о лесоизменениях, тестовая выборка с ув-ным шагом",
-                1,
+                myUseCase.getCurrentPosition(1, context),
+
                 myUseCase.getCurrentSwitch(1, context),
-                myUseCase.getCurrentSlider(1, context)
+                myUseCase.getCurrentSlider(1, context),
+                R.drawable.ic_item_1
             ),
             Item(
                 2,
                 "Преграды для прохождения огня",
-                0,
+                myUseCase.getCurrentPosition(2, context),
+
                 myUseCase.getCurrentSwitch(2, context),
-                myUseCase.getCurrentSlider(2, context)
+                myUseCase.getCurrentSlider(2, context),
+                R.drawable.ic_item_2
             ),
             Item(
                 3,
                 "Маска облачности от 02.07.2021",
-                3,
+                myUseCase.getCurrentPosition(3, context),
+
                 myUseCase.getCurrentSwitch(3, context),
-                myUseCase.getCurrentSlider(3, context)
+                myUseCase.getCurrentSlider(3, context),
+                R.drawable.ic_item_3
+
             ),
             Item(
                 4,
                 "Маска облачности от 02.07.2021",
                 4,
                 myUseCase.getCurrentSwitch(4, context),
-                myUseCase.getCurrentSlider(4, context)
+                myUseCase.getCurrentSlider(4, context),
+                R.drawable.ic_item_3
             ),
             Item(
                 5,
                 "Папка со слоями",
                 5,
                 myUseCase.getCurrentSwitch(5, context),
-                myUseCase.getCurrentSlider(5, context)
+                myUseCase.getCurrentSlider(5, context),
+                R.drawable.ic_item_5
             ),
             Item(
                 6,
                 "Сигналы о лесоизменениях, тестовая выборка с ув-ным шагом",
                 6,
                 myUseCase.getCurrentSwitch(6, context),
-                myUseCase.getCurrentSlider(6, context)
+                myUseCase.getCurrentSlider(6, context),
+                R.drawable.ic_item_1
             ),
             Item(
                 7,
                 "Преграды для прохождения огня",
                 7,
                 myUseCase.getCurrentSwitch(7, context),
-                myUseCase.getCurrentSlider(7, context)
+                myUseCase.getCurrentSlider(7, context),
+                R.drawable.ic_item_2
             ),
             Item(
                 8,
                 "Контуры гарей",
                 8,
                 myUseCase.getCurrentSwitch(8, context),
-                myUseCase.getCurrentSlider(8, context)
+                myUseCase.getCurrentSlider(8, context),
+                R.drawable.ic_item_3
             ),
             Item(
                 9,
                 "Маска облачности от 02.07.2021",
                 9,
                 myUseCase.getCurrentSwitch(9, context),
-                myUseCase.getCurrentSlider(9, context)
+                myUseCase.getCurrentSlider(9, context),
+                R.drawable.ic_item_3
             ),
             Item(
                 10,
                 "Маска облачности от 02.07.2021",
                 10,
                 myUseCase.getCurrentSwitch(10, context),
-                myUseCase.getCurrentSlider(10, context)
+                myUseCase.getCurrentSlider(10, context),
+                R.drawable.ic_item_3
             ),
             Item(
                 11,
                 "Маска облачности от 02.07.2021",
                 11,
                 myUseCase.getCurrentSwitch(11, context),
-                myUseCase.getCurrentSlider(11, context)
+                myUseCase.getCurrentSlider(11, context),
+                R.drawable.ic_item_11
             ),
             Item(
                 12,
                 "Маска облачности от 02.07.2021",
                 12,
                 myUseCase.getCurrentSwitch(12, context),
-                myUseCase.getCurrentSlider(12, context)
+                myUseCase.getCurrentSlider(12, context),
+                R.drawable.ic_item_3
             ),
         )
     }

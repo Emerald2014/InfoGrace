@@ -1,11 +1,12 @@
-package ru.kudesnik.infograce
+package ru.kudesnik.infograce.model
 
 data class Item(
     val id: Int,
     val name: String,
     var position: Int,
     var isCheckedSwitch:Boolean,
-    var sliderValue: Int
+    var sliderValue: Int,
+    val image: Int
 ) {
 
 }

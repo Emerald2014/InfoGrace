@@ -17,6 +17,8 @@ import coil.load
 import ru.kudesnik.infograce.databinding.ItemLayerBinding
 import ru.kudesnik.infograce.databinding.TestItemBinding
 import java.util.*
+import ru.kudesnik.infograce.model.*
+
 
 
 class LayerFragmentAdapterTest(

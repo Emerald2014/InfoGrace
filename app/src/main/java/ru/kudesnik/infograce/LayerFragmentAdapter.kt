@@ -3,51 +3,29 @@ package ru.kudesnik.infograce
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
+import android.content.res.ColorStateList
 import android.graphics.Typeface
+import android.graphics.drawable.Drawable
 import android.transition.AutoTransition
 import android.transition.TransitionManager
+import android.util.Log
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
-import android.view.View.OnTouchListener
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import ru.kudesnik.infograce.databinding.ItemLayerBinding
+import ru.kudesnik.infograce.model.Item
+import ru.kudesnik.infograce.model.*
+
 import java.util.*
 import kotlin.collections.ArrayList
 
 
-const val LAYER_SETTINGS = "layer_settings"
-const val SLIDER_VALUE_0 = "SLIDER_VALUE_0"
-const val SLIDER_VALUE_1 = "SLIDER_VALUE_1"
-const val SLIDER_VALUE_2 = "SLIDER_VALUE_2"
-const val SLIDER_VALUE_3 = "SLIDER_VALUE_3"
-const val SLIDER_VALUE_4 = "SLIDER_VALUE_4"
-const val SLIDER_VALUE_5 = "SLIDER_VALUE_5"
-const val SLIDER_VALUE_6 = "SLIDER_VALUE_6"
-const val SLIDER_VALUE_7 = "SLIDER_VALUE_7"
-const val SLIDER_VALUE_8 = "SLIDER_VALUE_8"
-const val SLIDER_VALUE_9 = "SLIDER_VALUE_9"
-const val SLIDER_VALUE_10 = "SLIDER_VALUE_10"
-const val SLIDER_VALUE_11 = "SLIDER_VALUE_11"
-const val SLIDER_VALUE_12 = "SLIDER_VALUE_12"
 
-const val SWITCH_VALUE_0 = "SWITCH_VALUE_0"
-const val SWITCH_VALUE_1 = "SWITCH_VALUE_1"
-const val SWITCH_VALUE_2 = "SWITCH_VALUE_2"
-const val SWITCH_VALUE_3 = "SWITCH_VALUE_3"
-const val SWITCH_VALUE_4 = "SWITCH_VALUE_4"
-const val SWITCH_VALUE_5 = "SWITCH_VALUE_5"
-const val SWITCH_VALUE_6 = "SWITCH_VALUE_6"
-const val SWITCH_VALUE_7 = "SWITCH_VALUE_7"
-const val SWITCH_VALUE_8 = "SWITCH_VALUE_8"
-const val SWITCH_VALUE_9 = "SWITCH_VALUE_9"
-const val SWITCH_VALUE_10 = "SWITCH_VALUE_10"
-const val SWITCH_VALUE_11 = "SWITCH_VALUE_11"
-const val SWITCH_VALUE_12 = "SWITCH_VALUE_12"
+
 
 class LayerFragmentAdapter(
 //    private val items: List<Item>,
@@ -80,7 +58,8 @@ private val itemTest = listOf("1", "2", "3")
 
         fun bind(item: Item, context: Context) = with(binding) {
             itemName.text = item.name
-            imageItem.load(R.drawable.item_temp)
+            val link: Int = item.image
+            imageItem.load(link)
 
 //Slider
             slider.value = item.sliderValue.toFloat()
@@ -121,6 +100,8 @@ private val itemTest = listOf("1", "2", "3")
                     TransitionManager.beginDelayedTransition(baseCardView, AutoTransition())
                     itemName.setTypeface(null, Typeface.NORMAL)
                     itemName.setTextColor(context.resources.getColor(R.color.white))
+                    imageItem.setColorFilter(context.resources.getColor(R.color.white))
+
                     hiddenView.visibility = View.GONE
                     arrowButton.setImageResource(R.drawable.ic_baseline_keyboard_arrow_down_24)
                 } else {
@@ -128,6 +109,7 @@ private val itemTest = listOf("1", "2", "3")
                         baseCardView, AutoTransition()
                     )
                     itemName.setTypeface(null, Typeface.BOLD)
+                    imageItem.setColorFilter(context.resources.getColor(R.color.item_text_bold))
                     itemName.setTextColor(context.resources.getColor(R.color.item_text_bold))
                     hiddenView.visibility = View.VISIBLE
                     arrowButton.setImageResource(R.drawable.ic_baseline_keyboard_arrow_up_24)
@@ -156,7 +138,7 @@ private val itemTest = listOf("1", "2", "3")
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
 
         holder.bind(itemList.sortedBy { it.position }[position], context = context)
-
+//setCurrentPosition(position)
         setClickListener(holder);
 //
 //        holder.image.setOnTouchListener(OnTouchListener { v, event ->
@@ -297,6 +279,8 @@ private val itemTest = listOf("1", "2", "3")
                 Collections.swap(itemList, i, i + 1)
             }
         } else {
+//            setCurrentPositionUp(toPosition)
+
             for (i in fromPosition downTo toPosition + 1) {
                 Collections.swap(itemList, i, i - 1)
             }
@@ -304,7 +288,91 @@ private val itemTest = listOf("1", "2", "3")
         notifyItemMoved(fromPosition, toPosition)
     }
 
+    private fun setCurrentPositionUp(position: Int) {
+        val sharedPreferences: SharedPreferences = context.getSharedPreferences(
+            LAYER_SETTINGS, AppCompatActivity.MODE_PRIVATE
+        )
+        var positionConst = ""
+        val editor: SharedPreferences.Editor = sharedPreferences.edit()
+        when (position) {
+            0 -> {
+                editor.putInt(SLIDER_POSITION_1, position)
+                editor.putInt(SLIDER_POSITION_0, position+1)
+            }
+            1 -> {
+                editor.putInt(SLIDER_POSITION_2, position)
+                editor.putInt(SLIDER_POSITION_1, position+1)
+            }
+            2 -> {
+                editor.putInt(SLIDER_POSITION_3, position)
+                editor.putInt(SLIDER_POSITION_2, position+1)
+            }
+            3 -> {
+                editor.putInt(SLIDER_POSITION_4, position)
+                editor.putInt(SLIDER_POSITION_3, position+1)
+            }
+            4 -> {
+                editor.putInt(SLIDER_POSITION_5, position)
+                editor.putInt(SLIDER_POSITION_4, position+1)
+            }
+            5 -> {
+                editor.putInt(SLIDER_POSITION_6, position)
+                editor.putInt(SLIDER_POSITION_5, position+1)
+            }
+            6 -> {
+                editor.putInt(SLIDER_POSITION_7, position)
+                editor.putInt(SLIDER_POSITION_6, position+1)
+            }
+            7 -> {
+                editor.putInt(SLIDER_POSITION_8, position)
+                editor.putInt(SLIDER_POSITION_7, position+1)
+            }
+            8 -> {
+                editor.putInt(SLIDER_POSITION_9, position)
+                editor.putInt(SLIDER_POSITION_8, position+1)
+            }
+            9 -> {
+                editor.putInt(SLIDER_POSITION_10, position)
+                editor.putInt(SLIDER_POSITION_9, position+1)
+            }
+            10 -> {
+                editor.putInt(SLIDER_POSITION_11, position)
+                editor.putInt(SLIDER_POSITION_10, position+1)
+            }
+            11 -> {
+                editor.putInt(SLIDER_POSITION_12, position)
+                editor.putInt(SLIDER_POSITION_11, position+1)
+            }
+        }
+        editor.putInt(positionConst, position)
+        editor.apply()
+    }
 
+    private fun setCurrentPosition(position: Int) {
+        val sharedPreferences: SharedPreferences = context.getSharedPreferences(
+            LAYER_SETTINGS, AppCompatActivity.MODE_PRIVATE
+        )
+        var positionConst = ""
+        val editor: SharedPreferences.Editor = sharedPreferences.edit()
+        when (position) {
+            0 -> positionConst = SLIDER_POSITION_0
+            1 -> positionConst = SLIDER_POSITION_1
+            2 -> positionConst = SLIDER_POSITION_2
+            3 -> positionConst = SLIDER_POSITION_3
+            4 -> positionConst = SLIDER_POSITION_4
+            5 -> positionConst = SLIDER_POSITION_5
+            6 -> positionConst = SLIDER_POSITION_6
+            7 -> positionConst = SLIDER_POSITION_7
+            8 -> positionConst = SLIDER_POSITION_8
+            9 -> positionConst = SLIDER_POSITION_9
+            10 -> positionConst = SLIDER_POSITION_10
+            11 -> positionConst = SLIDER_POSITION_11
+            12 -> positionConst = SLIDER_POSITION_12
+        }
+            editor.putInt(positionConst, position)
+                    editor.apply()
+
+    }
 }
 
 

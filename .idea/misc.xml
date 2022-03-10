@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/YandexDisk/AndroidStudy/TW/InfoGrace/app/src/main/res/drawable/ic_item_0.xml" value="0.1" />
         <entry key="..\:/YandexDisk/AndroidStudy/TW/InfoGrace/app/src/main/res/drawable/side_menu_l.xml" value="0.149" />
         <entry key="..\:/YandexDisk/AndroidStudy/TW/InfoGrace/app/src/main/res/layout/activity_coo4.xml" value="0.11510416666666666" />
         <entry key="..\:/YandexDisk/AndroidStudy/TW/InfoGrace/app/src/main/res/layout/activity_main.xml" value="0.136" />
@@ -12,7 +13,7 @@
         <entry key="..\:/YandexDisk/AndroidStudy/TW/InfoGrace/app/src/main/res/layout/fragment_layer.xml" value="0.2" />
         <entry key="..\:/YandexDisk/AndroidStudy/TW/InfoGrace/app/src/main/res/layout/fragment_mission.xml" value="0.11614583333333334" />
         <entry key="..\:/YandexDisk/AndroidStudy/TW/InfoGrace/app/src/main/res/layout/header_navigation_drawer.xml" value="0.2" />
-        <entry key="..\:/YandexDisk/AndroidStudy/TW/InfoGrace/app/src/main/res/layout/item_layer.xml" value="0.2569444444444444" />
+        <entry key="..\:/YandexDisk/AndroidStudy/TW/InfoGrace/app/src/main/res/layout/item_layer.xml" value="0.264" />
         <entry key="..\:/YandexDisk/AndroidStudy/TW/InfoGrace/app/src/main/res/layout/layer_fragment.xml" value="0.259375" />
         <entry key="..\:/YandexDisk/AndroidStudy/TW/InfoGrace/app/src/main/res/layout/spinner_item_layout_resource.xml" value="0.259375" />
         <entry key="..\:/YandexDisk/AndroidStudy/TW/InfoGrace/app/src/main/res/layout/test.xml" value="0.11614583333333334" />
