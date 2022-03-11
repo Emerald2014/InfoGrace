@@ -45,16 +45,3 @@ const val SLIDER_POSITION_10 = "SLIDER_POSITION_10"
 const val SLIDER_POSITION_11 = "SLIDER_POSITION_11"
 const val SLIDER_POSITION_12 = "SLIDER_POSITION_12"
 
-const val IMAGE_0 = R.drawable.item_0
-const val IMAGE_1 = R.drawable.item_1
-const val IMAGE_2 = R.drawable.item_2_0
-const val IMAGE_3 = R.drawable.item_3
-const val IMAGE_4 = R.drawable.item_3
-const val IMAGE_5 = R.drawable.item_5
-const val IMAGE_6 = R.drawable.item_2_0
-const val IMAGE_7 = R.drawable.item_3
-const val IMAGE_8 = R.drawable.item_0
-const val IMAGE_9 = R.drawable.item_0
-const val IMAGE_10 = R.drawable.item_0
-const val IMAGE_11 = R.drawable.item_0
-const val IMAGE_12 = R.drawable.item_0

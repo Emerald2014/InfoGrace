@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.res.ColorStateList
+import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.Drawable
 import android.transition.AutoTransition
@@ -91,6 +92,17 @@ private val itemTest = listOf("1", "2", "3")
             button3.setOnClickListener {
                 Toast.makeText(context, "Нажата кнопка 3", Toast.LENGTH_SHORT).show()
             }
+
+//isVisible
+if (item.isVisible) {
+    buttonVisibility.visibility = View.GONE
+} else {
+    buttonVisibility.visibility = View.VISIBLE
+//    imageItem.background.alpha = 127
+//    itemName.setTextColor(Color.TRANSPARENT)
+//arrowButton.background.alpha = 127;
+
+}
 
 //Root нажатие
             root.setOnClickListener {

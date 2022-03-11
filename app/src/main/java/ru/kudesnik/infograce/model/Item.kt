@@ -6,7 +6,8 @@ data class Item(
     var position: Int,
     var isCheckedSwitch:Boolean,
     var sliderValue: Int,
-    val image: Int
+    val image: Int,
+    var isVisible: Boolean
 ) {
 
 }

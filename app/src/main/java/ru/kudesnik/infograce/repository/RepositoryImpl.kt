@@ -17,7 +17,8 @@ class RepositoryImpl : Repository {
                 myUseCase.getCurrentPosition(0, context),
                 myUseCase.getCurrentSwitch(0, context),
                 myUseCase.getCurrentSlider(0, context),
-                R.drawable.ic_item_0
+                R.drawable.ic_item_0,
+                isVisible = true
             ),
             Item(
                 1,
@@ -26,7 +27,8 @@ class RepositoryImpl : Repository {
 
                 myUseCase.getCurrentSwitch(1, context),
                 myUseCase.getCurrentSlider(1, context),
-                R.drawable.ic_item_1
+                R.drawable.ic_item_1,
+                isVisible = true
             ),
             Item(
                 2,
@@ -35,7 +37,8 @@ class RepositoryImpl : Repository {
 
                 myUseCase.getCurrentSwitch(2, context),
                 myUseCase.getCurrentSlider(2, context),
-                R.drawable.ic_item_2
+                R.drawable.ic_item_2,
+                isVisible = true
             ),
             Item(
                 3,
@@ -44,7 +47,8 @@ class RepositoryImpl : Repository {
 
                 myUseCase.getCurrentSwitch(3, context),
                 myUseCase.getCurrentSlider(3, context),
-                R.drawable.ic_item_3
+                R.drawable.ic_item_3,
+                isVisible = true
 
             ),
             Item(
@@ -53,7 +57,8 @@ class RepositoryImpl : Repository {
                 4,
                 myUseCase.getCurrentSwitch(4, context),
                 myUseCase.getCurrentSlider(4, context),
-                R.drawable.ic_item_3
+                R.drawable.ic_item_3,
+                isVisible = true
             ),
             Item(
                 5,
@@ -61,7 +66,8 @@ class RepositoryImpl : Repository {
                 5,
                 myUseCase.getCurrentSwitch(5, context),
                 myUseCase.getCurrentSlider(5, context),
-                R.drawable.ic_item_5
+                R.drawable.ic_item_5,
+                isVisible = true
             ),
             Item(
                 6,
@@ -69,7 +75,8 @@ class RepositoryImpl : Repository {
                 6,
                 myUseCase.getCurrentSwitch(6, context),
                 myUseCase.getCurrentSlider(6, context),
-                R.drawable.ic_item_1
+                R.drawable.ic_item_1,
+                isVisible = true
             ),
             Item(
                 7,
@@ -77,7 +84,8 @@ class RepositoryImpl : Repository {
                 7,
                 myUseCase.getCurrentSwitch(7, context),
                 myUseCase.getCurrentSlider(7, context),
-                R.drawable.ic_item_2
+                R.drawable.ic_item_2,
+                isVisible = true
             ),
             Item(
                 8,
@@ -85,7 +93,8 @@ class RepositoryImpl : Repository {
                 8,
                 myUseCase.getCurrentSwitch(8, context),
                 myUseCase.getCurrentSlider(8, context),
-                R.drawable.ic_item_3
+                R.drawable.ic_item_3,
+                isVisible = false
             ),
             Item(
                 9,
@@ -93,7 +102,8 @@ class RepositoryImpl : Repository {
                 9,
                 myUseCase.getCurrentSwitch(9, context),
                 myUseCase.getCurrentSlider(9, context),
-                R.drawable.ic_item_3
+                R.drawable.ic_item_3,
+                isVisible = true
             ),
             Item(
                 10,
@@ -101,7 +111,8 @@ class RepositoryImpl : Repository {
                 10,
                 myUseCase.getCurrentSwitch(10, context),
                 myUseCase.getCurrentSlider(10, context),
-                R.drawable.ic_item_3
+                R.drawable.ic_item_3,
+                isVisible = true
             ),
             Item(
                 11,
@@ -109,7 +120,8 @@ class RepositoryImpl : Repository {
                 11,
                 myUseCase.getCurrentSwitch(11, context),
                 myUseCase.getCurrentSlider(11, context),
-                R.drawable.ic_item_11
+                R.drawable.ic_item_11,
+                isVisible = true
             ),
             Item(
                 12,
@@ -117,7 +129,8 @@ class RepositoryImpl : Repository {
                 12,
                 myUseCase.getCurrentSwitch(12, context),
                 myUseCase.getCurrentSlider(12, context),
-                R.drawable.ic_item_3
+                R.drawable.ic_item_3,
+                isVisible = true
             ),
         )
     }

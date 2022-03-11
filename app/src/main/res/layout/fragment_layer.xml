@@ -30,36 +30,98 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <com.google.android.material.bottomnavigation.BottomNavigationView
-            android:layout_width="match_parent"
+
+
+        <LinearLayout
+            android:layout_width="48dp"
             android:layout_height="match_parent"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginStart="24dp"
-            android:layout_marginEnd="246dp"
+            android:layout_marginStart="12dp"
+            android:gravity="center"
+
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:menu="@menu/menu_bottom"
-            tools:menu="@menu/menu_bottom" />
+            android:id="@+id/llAdd">
+
+            <ImageView
+                android:id="@+id/buttonAdd"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center_vertical|center"
+                android:contentDescription="@string/image_to_drop"
+                android:src="@drawable/ic_add"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="48dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="60dp"
+            android:gravity="center"
+
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:id="@+id/llSearch">
+
+            <ImageView
+                android:id="@+id/buttonSearch"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center_vertical|center"
+                android:contentDescription="@string/image_to_drop"
+                android:src="@drawable/ic_search"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="48dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="108dp"
+            android:gravity="center"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:id="@+id/llDelete">
+
+            <ImageView
+                android:id="@+id/buttonDelete"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center_vertical|center"
+                android:contentDescription="@string/image_to_drop"
+                android:src="@drawable/ic_delete"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </LinearLayout>
+
+
 
         <ImageView
+            android:id="@+id/buttonDrag"
             android:layout_width="24dp"
             android:layout_height="20dp"
             android:layout_marginEnd="68dp"
-            android:src="@drawable/ic_baseline_drag_handle_24"
+            android:contentDescription="@string/image_to_drop"
+            android:src="@drawable/ic_drag_list_item"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:contentDescription="@string/image_to_drop" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.slider.Slider
             android:id="@+id/sliderAll"
-            android:layout_width="54dp"
+            android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_marginEnd="16dp"
+            android:layout_marginEnd="8dp"
             android:stepSize="1"
             android:valueFrom="0.0"
             android:valueTo="2.0"
