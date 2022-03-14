@@ -1,17 +1,17 @@
-package ru.kudesnik.infograce
+package ru.kudesnik.infograce.ui
 
 
 import android.content.res.Configuration
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.util.Log
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.tabs.TabLayout
+import ru.kudesnik.infograce.ui.mission_fragment.MissionFragment
+import ru.kudesnik.infograce.R
 import ru.kudesnik.infograce.databinding.ActivityMainBinding
+import ru.kudesnik.infograce.ui.background_fragment.BackgroundFragment
+import ru.kudesnik.infograce.ui.layer_fragment.LayerFragment
 
 
 class MainActivityK : AppCompatActivity() {

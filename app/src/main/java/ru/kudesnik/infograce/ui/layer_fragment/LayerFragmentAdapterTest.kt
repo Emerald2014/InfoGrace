@@ -1,20 +1,13 @@
-package ru.kudesnik.infograce
+package ru.kudesnik.infograce.ui.layer_fragment
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.graphics.Typeface
-import android.transition.AutoTransition
-import android.transition.TransitionManager
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
-import android.view.View.OnTouchListener
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
-import coil.load
-import ru.kudesnik.infograce.databinding.ItemLayerBinding
+import ru.kudesnik.infograce.ui.utils.ItemMoveCallback
 import ru.kudesnik.infograce.databinding.TestItemBinding
 import java.util.*
 import ru.kudesnik.infograce.model.*

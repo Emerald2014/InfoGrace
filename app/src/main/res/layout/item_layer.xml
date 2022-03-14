@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/app_background"
-    tools:context=".LayerFragment">
+    tools:context=".ui.layer_fragment.LayerFragment">
 
     <!--Base CardView-->
     <androidx.cardview.widget.CardView

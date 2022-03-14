@@ -11,7 +11,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.InfoGrace">
         <activity
-            android:name=".MainActivityK"
+            android:name=".ui.MainActivityK"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

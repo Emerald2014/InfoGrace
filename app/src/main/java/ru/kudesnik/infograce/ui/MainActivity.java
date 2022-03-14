@@ -1,4 +1,4 @@
-package ru.kudesnik.infograce;
+package ru.kudesnik.infograce.ui;
 
 import android.os.Bundle;
 import android.transition.AutoTransition;
@@ -10,6 +10,8 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+
+import ru.kudesnik.infograce.R;
 
 public class MainActivity extends AppCompatActivity {
 

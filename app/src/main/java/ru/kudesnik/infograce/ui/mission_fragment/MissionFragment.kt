@@ -1,10 +1,11 @@
-package ru.kudesnik.infograce
+package ru.kudesnik.infograce.ui.mission_fragment
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import ru.kudesnik.infograce.R
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -13,10 +14,10 @@ private const val ARG_PARAM2 = "param2"
 
 /**
  * A simple [Fragment] subclass.
- * Use the [BackgroundFragment.newInstance] factory method to
+ * Use the [MissionFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class BackgroundFragment : Fragment() {
+class MissionFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
@@ -34,12 +35,12 @@ class BackgroundFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_background, container, false)
+        return inflater.inflate(R.layout.fragment_mission, container, false)
     }
 
     companion object {
 
-        fun newInstance() =            BackgroundFragment()
+        fun newInstance() =           MissionFragment()
 
     }
 }

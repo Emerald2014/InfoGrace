@@ -1,18 +1,24 @@
-package ru.kudesnik.infograce
+package ru.kudesnik.infograce.ui.layer_fragment
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import ru.kudesnik.infograce.databinding.FragmentLayerBinding
+import com.google.android.material.slider.Slider
+import kotlinx.coroutines.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.scope.Scope
+import ru.kudesnik.infograce.databinding.FragmentLayerBinding
 import ru.kudesnik.infograce.model.AppState
 import ru.kudesnik.infograce.model.entities.Item
 import ru.kudesnik.infograce.repository.RepositoryImpl
+import ru.kudesnik.infograce.ui.utils.ItemMoveCallback
 
 
 /*Задачи
@@ -32,16 +38,17 @@ open class LayerFragment : Fragment() {
     private var _binding: FragmentLayerBinding? = null
     private val binding get() = _binding!!
     private val adapterLayer: LayerFragmentAdapter by lazy {
-        LayerFragmentAdapter(requireContext(), object :SetSliderValue{
-            override fun setSliderValue(item:Item) {
+        LayerFragmentAdapter(requireContext(), object : DoUpdate {
+            override fun doUpdateItem(item: Item) {
                 viewModel.update(item = item)
             }
-        } )
+        })
     }
     private var recyclerViewVer2: RecyclerView? = null
     private val repository = RepositoryImpl()
     lateinit var items2: List<Item>
-     var itemsDao: List<Item> = listOf()
+    var itemsDao: List<Item> = listOf()
+    var mainSliderPosition: Int = -1
 
 //    val items: List<Item> = listOf(
 //        Item(0, "Слой делян", 2, false, 0),
@@ -103,16 +110,16 @@ open class LayerFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         items2 = repository.getItems(requireContext())
-Thread {
-    for (item in items2) {
-        repository.insertItem(item)
+        Thread {
+            for (item in items2) {
+                repository.insertItem(item)
 
-    }
-    Log.d("myTag", repository.getAllItems().toString())
-}.start()
-        Thread{
+            }
+            Log.d("myTag", repository.getAllItems().toString())
+        }.start()
+        Thread {
 
-             itemsDao =repository.getAllItems()
+            itemsDao = repository.getAllItems()
         }
         Log.d("myTag", "itemsDao - ${itemsDao.toString()}")
 
@@ -244,39 +251,67 @@ Thread {
 //                Toast.makeText(requireContext(), "Нажата кнопка 3", Toast.LENGTH_SHORT).show()
 //            }
 //            setupSwipeListener(rw)
-//Slider общий
-//            var isCheckedInt = 0
-//            for (item in items) {
-//                if (item.isCheckedSwitch) isCheckedInt++
-//            }
-//            var isChecked = when (isCheckedInt) {
-//                items.size -> 2
-//                0 -> 0
-//                else -> 1
-//            }
+//Slider общий, трехпозиционный
 
-//            sliderAll.value = isChecked.toFloat()
-//            sliderAll.addOnSliderTouchListener(object : Slider.OnSliderTouchListener {
-//                @SuppressLint("RestrictedApi")
-//                override fun onStartTrackingTouch(slider: Slider) {
-//                    TODO("Not yet implemented")
-//                }
-//
-//                @SuppressLint("RestrictedApi")
-//                override fun onStopTrackingTouch(slider: Slider) {
-//                    when (slider.value) {
-////                        0 ->  isChecked = false
-////                        2 ->  isChecked = true
+
+            getMainSliderPosition()
+
+//            uiScope.launch {
+//                withContext(Dispatchers.IO) {
+//                    allItems = repository.getAllItems()
+//                    withContext(Dispatchers.Main) {
+//                        for (item in allItems) {
+//                            if (item.isCheckedSwitch) isCheckedInt++
+//                        }
+//                      var  test = when (isCheckedInt) {
+//                            allItems.size -> 2
+//                            0 -> 0
+//                            else -> 1
+//                        }
 //                    }
 //                }
 //
-//            })
+//            sliderAll.value = viewModel.getMainSliderPosition().toFloat()
+            Log.d("myTag", "Value - ${sliderAll.value.toString()}")
+            sliderAll.addOnSliderTouchListener(object : Slider.OnSliderTouchListener {
+                @SuppressLint("RestrictedApi")
+                override fun onStartTrackingTouch(slider: Slider) {
+                    TODO("Not yet implemented")
+                }
 
-
-
-
-//            setupClicks()
+                @SuppressLint("RestrictedApi")
+                override fun onStopTrackingTouch(slider: Slider) {
+                    when (slider.value.toInt()) {
+//                        0 ->  isChecked = false
+//                        2 ->  isChecked = true
+                    }
+                }
+            })
         }
+    }
+
+    private fun FragmentLayerBinding.getMainSliderPosition() {
+        var viewModelJob = Job()
+        val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
+        var isCheckedInt = 0
+        var test = 0
+        var allItems = listOf<Item>()
+
+        Thread {
+            allItems = repository.getAllItems()
+            for (item in allItems) {
+                if (item.isCheckedSwitch) isCheckedInt++
+            }
+            test = when (isCheckedInt) {
+                allItems.size -> 2
+                0 -> 0
+                else -> 1
+            }
+            activity?.runOnUiThread {
+                sliderAll.value = test.toFloat()
+
+            }
+        }.start()
     }
 
     override fun onDestroyView() {
@@ -342,7 +377,7 @@ Thread {
 //        itemTouchHelper.attachToRecyclerView(rw)
 //    }
 
-//    fun getMovementFlags(
+    //    fun getMovementFlags(
 //        recyclerView: RecyclerView?,
 //        viewHolder: RecyclerView.ViewHolder?
 //    ): Int {
@@ -358,9 +393,17 @@ Thread {
 //    fun isItemViewSwipeEnabled(): Boolean {
 //        return true
 //    }
-interface SetSliderValue {
-    fun setSliderValue(item:Item)
-}
+    interface SetSliderValue {
+        fun setSliderValue(item: Item)
+    }
+
+    interface SetCheckedSwitch {
+        fun setCheckedSwitch(item: Item)
+    }
+
+    interface DoUpdate {
+        fun doUpdateItem(item: Item)
+    }
 
     companion object {
 

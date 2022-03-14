@@ -1,8 +1,10 @@
-package ru.kudesnik.infograce;
+package ru.kudesnik.infograce.ui.utils;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
+
+import ru.kudesnik.infograce.ui.layer_fragment.LayerFragmentAdapter;
 
 public class ItemMoveCallback extends ItemTouchHelper.Callback {
 

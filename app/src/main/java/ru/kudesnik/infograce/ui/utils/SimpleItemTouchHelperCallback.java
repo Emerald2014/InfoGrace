@@ -1,8 +1,10 @@
-package ru.kudesnik.infograce;
+package ru.kudesnik.infograce.ui.utils;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
+
+import ru.kudesnik.infograce.TestAdapter;
 
 public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
 

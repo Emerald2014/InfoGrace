@@ -1,7 +1,6 @@
 package ru.kudesnik.infograce;
 
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -12,6 +11,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import ru.kudesnik.infograce.ui.layer_fragment.LayerFragment;
 
 public class TestAdapter extends RecyclerView.Adapter<TestAdapter.ItemViewHolder>{
 
