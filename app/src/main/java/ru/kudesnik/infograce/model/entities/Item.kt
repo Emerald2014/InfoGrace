@@ -1,4 +1,4 @@
-package ru.kudesnik.infograce.model
+package ru.kudesnik.infograce.model.entities
 
 data class Item(
     val id: Int,

@@ -2,7 +2,9 @@ package ru.kudesnik.infograce.repository
 
 import android.content.Context
 import ru.kudesnik.infograce.R
-import ru.kudesnik.infograce.model.Item
+import ru.kudesnik.infograce.model.entities.Item
+import ru.kudesnik.infograce.model.entities.database.ItemDatabase
+import ru.kudesnik.infograce.model.entities.database.ItemEntity
 import ru.kudesnik.infograce.usecases.UseCaseGetSharedPref
 
 class RepositoryImpl : Repository {
@@ -135,6 +137,51 @@ class RepositoryImpl : Repository {
         )
     }
 
+    override fun getAllItems(): List<Item> {
+        return convertEntityToItem(ItemDatabase.db.itemDao().all())
+    }
+
+
+    override fun updateItem(item: Item) {
+        ItemDatabase.db.itemDao().update(
+            convertItemToEntity(item)
+        )
+    }
+
+    override fun insertItem(item: Item) {
+       ItemDatabase.db.itemDao().insert(convertItemToEntity(item))
+    }
+
+    override fun getItemByName(name: String): List<Item> {
+        return convertEntityToItem(ItemDatabase.db.itemDao().getDataByWord(name))
+
+    }
+
+    private fun convertEntityToItem(entityList: List<ItemEntity>): List<Item> {
+        return entityList.map {
+            Item(
+                id = it.idEntity,
+                name = it.nameEntity,
+                position = it.positionEntity,
+                isCheckedSwitch = it.switchEntity,
+                sliderValue = it.sliderEntity,
+                image = it.imageEntity,
+                isVisible = it.visibleEntity
+            )
+        }
+    }
+
+    private fun convertItemToEntity(item: Item):ItemEntity {
+        return ItemEntity(
+            idEntity = item.id,
+            nameEntity = item.name,
+            sliderEntity = item.sliderValue,
+            switchEntity = item.isCheckedSwitch,
+            positionEntity = item.position,
+            visibleEntity = item.isVisible,
+            imageEntity = item.image
+        )
+    }
 //    private fun getCurrentSlider(pos: Int): Int {
 //        return myUseCase.getCurrentSlider(pos, co)
 //    }

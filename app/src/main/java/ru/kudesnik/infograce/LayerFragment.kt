@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import ru.kudesnik.infograce.databinding.FragmentLayerBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.kudesnik.infograce.model.AppState
-import ru.kudesnik.infograce.model.Item
+import ru.kudesnik.infograce.model.entities.Item
 import ru.kudesnik.infograce.repository.RepositoryImpl
 
 
@@ -31,10 +31,18 @@ open class LayerFragment : Fragment() {
 
     private var _binding: FragmentLayerBinding? = null
     private val binding get() = _binding!!
-    private var adapterLayer: LayerFragmentAdapter? = null
+    private val adapterLayer: LayerFragmentAdapter by lazy {
+        LayerFragmentAdapter(requireContext(), object :SetSliderValue{
+            override fun setSliderValue(item:Item) {
+                viewModel.update(item = item)
+            }
+        } )
+    }
     private var recyclerViewVer2: RecyclerView? = null
     private val repository = RepositoryImpl()
     lateinit var items2: List<Item>
+     var itemsDao: List<Item> = listOf()
+
 //    val items: List<Item> = listOf(
 //        Item(0, "Слой делян", 2, false, 0),
 //        Item(
@@ -95,6 +103,18 @@ open class LayerFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         items2 = repository.getItems(requireContext())
+Thread {
+    for (item in items2) {
+        repository.insertItem(item)
+
+    }
+    Log.d("myTag", repository.getAllItems().toString())
+}.start()
+        Thread{
+
+             itemsDao =repository.getAllItems()
+        }
+        Log.d("myTag", "itemsDao - ${itemsDao.toString()}")
 
 //        val adapter:ListAdapter =
 //            ArrayAdapter(requireContext(), R.layout.item_layer, R.id.itemName, valuesString)
@@ -112,22 +132,25 @@ open class LayerFragment : Fragment() {
 
         with(binding) {
 //Вот так все работает без ViewModel
-            recyclerViewVer2 = recyclerViewLayer
-            recyclerViewLayer.adapter = adapterLayer
-            adapterLayer = LayerFragmentAdapter(requireContext()).apply { setItems(items2) }
-            recyclerViewLayer.adapter = adapterLayer
-            val callback: ItemTouchHelper.Callback = ItemMoveCallback(adapterLayer)
-            val touchHelper = ItemTouchHelper(callback)
-            touchHelper.attachToRecyclerView(recyclerViewVer2)
-//Конец кода
-//А так работает с ViewModel
 //            recyclerViewVer2 = recyclerViewLayer
 //            recyclerViewLayer.adapter = adapterLayer
-//            viewModel.getItems(requireContext())
-//            viewModel.getLiveData().observe(viewLifecycleOwner) { renderData(it) }
+//            Thread {
+//                adapterLayer = LayerFragmentAdapter(requireContext()).apply { setItems(repository.getAllItems()) }
+//            }.start()
+//            recyclerViewLayer.adapter = adapterLayer
 //            val callback: ItemTouchHelper.Callback = ItemMoveCallback(adapterLayer)
 //            val touchHelper = ItemTouchHelper(callback)
 //            touchHelper.attachToRecyclerView(recyclerViewVer2)
+//Конец кода
+//А так работает с ViewModel
+            recyclerViewVer2 = recyclerViewLayer
+            recyclerViewLayer.adapter = adapterLayer
+            viewModel.getAllItems()
+//            viewModel.getItems(requireContext())
+            viewModel.getLiveData().observe(viewLifecycleOwner) { renderData(it) }
+            val callback: ItemTouchHelper.Callback = ItemMoveCallback(adapterLayer)
+            val touchHelper = ItemTouchHelper(callback)
+            touchHelper.attachToRecyclerView(recyclerViewVer2)
 //Конец кода
 //            recyclerViewVer2!!.adapter = adapterLayer
 
@@ -264,7 +287,7 @@ open class LayerFragment : Fragment() {
     private fun renderData(appState: AppState) = with(binding) {
         when (appState) {
             is AppState.Success -> {
-                adapterLayer = LayerFragmentAdapter(requireContext()).apply {
+                adapterLayer.apply {
                     setItems(appState.modelData)
 
                 }
@@ -335,7 +358,9 @@ open class LayerFragment : Fragment() {
 //    fun isItemViewSwipeEnabled(): Boolean {
 //        return true
 //    }
-
+interface SetSliderValue {
+    fun setSliderValue(item:Item)
+}
 
     companion object {
 

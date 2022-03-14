@@ -3,10 +3,8 @@ package ru.kudesnik.infograce
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
-import android.content.res.ColorStateList
-import android.graphics.Color
 import android.graphics.Typeface
-import android.graphics.drawable.Drawable
+import android.os.AsyncTask
 import android.transition.AutoTransition
 import android.transition.TransitionManager
 import android.util.Log
@@ -18,25 +16,25 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import ru.kudesnik.infograce.databinding.ItemLayerBinding
-import ru.kudesnik.infograce.model.Item
+import ru.kudesnik.infograce.model.entities.Item
 import ru.kudesnik.infograce.model.*
+import ru.kudesnik.infograce.repository.RepositoryImpl
 
 import java.util.*
 import kotlin.collections.ArrayList
 
-
-
-
-
 class LayerFragmentAdapter(
 //    private val items: List<Item>,
-    private val context: Context
+    private val context: Context,
+    private val setSliderValue: LayerFragment.SetSliderValue
+
 
 ) :
     RecyclerView.Adapter<LayerFragmentAdapter.MyViewHolder>(),
     ItemMoveCallback.ItemTouchHelperContract {
     private lateinit var binding: ItemLayerBinding
     private var itemList= ArrayList<Item>()
+    val repository: RepositoryImpl = RepositoryImpl()
 //    private var itemList: List<Item> = mutableListOf()
 //    private val itemForMoved : ArrayList<Item> = itemList.add
 private val itemTest = listOf("1", "2", "3")
@@ -61,11 +59,14 @@ private val itemTest = listOf("1", "2", "3")
             itemName.text = item.name
             val link: Int = item.image
             imageItem.load(link)
+            Log.d("listOperations", "Действие 3 - ")
 
 //Slider
             slider.value = item.sliderValue.toFloat()
             textViewItemPercent.text = slider.value.toInt().toString()
             slider.addOnChangeListener { slider, value, fromUser ->
+                item.sliderValue = value.toInt()
+                setSliderValue.setSliderValue(item)
                 setCurrentSlider(value.toInt(), item.id)
                 textViewItemPercent.text = value.toInt().toString()
             }
@@ -125,6 +126,8 @@ if (item.isVisible) {
                     itemName.setTextColor(context.resources.getColor(R.color.item_text_bold))
                     hiddenView.visibility = View.VISIBLE
                     arrowButton.setImageResource(R.drawable.ic_baseline_keyboard_arrow_up_24)
+
+
                 }
             }
 
@@ -150,6 +153,8 @@ if (item.isVisible) {
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
 
         holder.bind(itemList.sortedBy { it.position }[position], context = context)
+
+
 //setCurrentPosition(position)
         setClickListener(holder);
 //
@@ -385,6 +390,8 @@ if (item.isVisible) {
                     editor.apply()
 
     }
+
+
 }
 
 
