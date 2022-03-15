@@ -42,6 +42,11 @@ open class LayerFragment : Fragment() {
             override fun doUpdateItem(item: Item) {
                 viewModel.update(item = item)
             }
+        }, object : DoUpdateSlider {
+            override fun doUpdateSlider() {
+                getMainSliderPosition()
+            }
+
         })
     }
     private var recyclerViewVer2: RecyclerView? = null
@@ -49,54 +54,6 @@ open class LayerFragment : Fragment() {
     lateinit var items2: List<Item>
     var itemsDao: List<Item> = listOf()
     var mainSliderPosition: Int = -1
-
-//    val items: List<Item> = listOf(
-//        Item(0, "Слой делян", 2, false, 0),
-//        Item(
-//            1,
-//            "Сигналы о лесоизменениях, тестовая выборка с ув-ным шагом",
-//            1,
-//            false,
-//            1
-//        ),
-//        Item(2, "Преграды для прохождения огня", 0, false, 2),
-//    )
-    /*
-    Item(3, "Маска облачности от 02.07.2021", 3, getCurrentSwitch(3), getCurrentSlider(3)),
-    Item(4, "Маска облачности от 02.07.2021", 4, getCurrentSwitch(4), getCurrentSlider(4)),
-    Item(5, "Папка со слоями", 5, getCurrentSwitch(5), getCurrentSlider(5)),
-    Item(
-        6,
-        "Сигналы о лесоизменениях, тестовая выборка с ув-ным шагом",
-        6,
-        getCurrentSwitch(6),
-        getCurrentSlider(6)
-    ),
-    Item(7, "Преграды для прохождения огня", 7, getCurrentSwitch(7), getCurrentSlider(7)),
-    Item(8, "Контуры гарей", 8, getCurrentSwitch(8), getCurrentSlider(7)),
-    Item(9, "Маска облачности от 02.07.2021", 9, getCurrentSwitch(9), getCurrentSlider(9)),
-    Item(
-        10,
-        "Маска облачности от 02.07.2021",
-        10,
-        getCurrentSwitch(10),
-        getCurrentSlider(10)
-    ),
-    Item(
-        11,
-        "Маска облачности от 02.07.2021",
-        11,
-        getCurrentSwitch(11),
-        getCurrentSlider(11)
-    ),
-    Item(
-        12,
-        "Маска облачности от 02.07.2021",
-        12,
-        getCurrentSwitch(12),
-        getCurrentSlider(12)
-    ),
-)*/
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -110,18 +67,18 @@ open class LayerFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         items2 = repository.getItems(requireContext())
-        Thread {
-            for (item in items2) {
-                repository.insertItem(item)
-
-            }
-            Log.d("myTag", repository.getAllItems().toString())
-        }.start()
-        Thread {
-
-            itemsDao = repository.getAllItems()
-        }
-        Log.d("myTag", "itemsDao - ${itemsDao.toString()}")
+//        Thread {
+//            for (item in items2) {
+//                repository.insertItem(item)
+//
+//            }
+//            Log.d("myTag", repository.getAllItems().toString())
+//        }.start()
+//        Thread {
+//
+//            itemsDao = repository.getAllItems()
+//        }
+//        Log.d("myTag", "itemsDao - ${itemsDao.toString()}")
 
 //        val adapter:ListAdapter =
 //            ArrayAdapter(requireContext(), R.layout.item_layer, R.id.itemName, valuesString)
@@ -153,7 +110,6 @@ open class LayerFragment : Fragment() {
             recyclerViewVer2 = recyclerViewLayer
             recyclerViewLayer.adapter = adapterLayer
             viewModel.getAllItems()
-//            viewModel.getItems(requireContext())
             viewModel.getLiveData().observe(viewLifecycleOwner) { renderData(it) }
             val callback: ItemTouchHelper.Callback = ItemMoveCallback(adapterLayer)
             val touchHelper = ItemTouchHelper(callback)
@@ -253,8 +209,7 @@ open class LayerFragment : Fragment() {
 //            setupSwipeListener(rw)
 //Slider общий, трехпозиционный
 
-
-            getMainSliderPosition()
+//            getMainSliderPosition()
 
 //            uiScope.launch {
 //                withContext(Dispatchers.IO) {
@@ -270,8 +225,15 @@ open class LayerFragment : Fragment() {
 //                        }
 //                    }
 //                }
+
+
+//            viewModel.getMainSliderPosition()
+//            viewModel.getMyLiveData().observe(viewLifecycleOwner) { renderData(it) }
+
+//            viewModel.itemLiveData
 //
 //            sliderAll.value = viewModel.getMainSliderPosition().toFloat()
+            getMainSliderPosition()
             Log.d("myTag", "Value - ${sliderAll.value.toString()}")
             sliderAll.addOnSliderTouchListener(object : Slider.OnSliderTouchListener {
                 @SuppressLint("RestrictedApi")
@@ -290,12 +252,11 @@ open class LayerFragment : Fragment() {
         }
     }
 
-    private fun FragmentLayerBinding.getMainSliderPosition() {
-        var viewModelJob = Job()
-        val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
+    private fun getMainSliderPosition() = with(binding) {
+
         var isCheckedInt = 0
-        var test = 0
-        var allItems = listOf<Item>()
+        var test: Int
+        var allItems: List<Item>
 
         Thread {
             allItems = repository.getAllItems()
@@ -309,6 +270,7 @@ open class LayerFragment : Fragment() {
             }
             activity?.runOnUiThread {
                 sliderAll.value = test.toFloat()
+                Log.d("myTag", "Тест в методе во фрагменте Test = $test")
 
             }
         }.start()
@@ -330,6 +292,13 @@ open class LayerFragment : Fragment() {
             }
             is AppState.Error -> {}
             AppState.Loading -> {}
+            is AppState.SuccessSlider -> {
+//                viewModel.getMainSliderPosition()
+
+                sliderAll.value = appState.sliderData.toFloat()
+                Log.d("myTag", "Value Render - ${sliderAll.value.toString()}")
+
+            }
 
         }
     }
@@ -393,16 +362,14 @@ open class LayerFragment : Fragment() {
 //    fun isItemViewSwipeEnabled(): Boolean {
 //        return true
 //    }
-    interface SetSliderValue {
-        fun setSliderValue(item: Item)
-    }
 
-    interface SetCheckedSwitch {
-        fun setCheckedSwitch(item: Item)
-    }
 
     interface DoUpdate {
         fun doUpdateItem(item: Item)
+    }
+
+    interface DoUpdateSlider {
+        fun doUpdateSlider()
     }
 
     companion object {

@@ -21,7 +21,9 @@ import java.util.*
 
 class LayerFragmentAdapter(
     private val context: Context,
-    private val updateItem: LayerFragment.DoUpdate
+    private val updateItem: LayerFragment.DoUpdate,
+    private val updateMainSlider: LayerFragment.DoUpdateSlider
+
 ) :
     RecyclerView.Adapter<LayerFragmentAdapter.MyViewHolder>(),
     ItemMoveCallback.ItemTouchHelperContract {
@@ -34,6 +36,16 @@ class LayerFragmentAdapter(
         notifyDataSetChanged()
 
     }
+//    private val updateMainSlider= DoUpdateMainSlider (object: DoUpdateMainSlider {
+//        override fun doUpdateSlider() {
+//            TODO("Not yet implemented")
+//        }
+//
+//    })
+//
+//    interface DoUpdateMainSlider{
+//        fun doUpdateSlider()
+//    }
 
     inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(item: Item, context: Context) = with(binding) {
@@ -63,6 +75,7 @@ class LayerFragmentAdapter(
                 Toast.makeText(context, "Переключатель $check", Toast.LENGTH_SHORT).show()
                 item.isCheckedSwitch = isChecked
                 updateItem.doUpdateItem(item)
+                updateMainSlider.doUpdateSlider()
 
 //                switchChecked.setCheckedSwitch(item)
 //                setCurrentSwitch(isChecked, item.id)
