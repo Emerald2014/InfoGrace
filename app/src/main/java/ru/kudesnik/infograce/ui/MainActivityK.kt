@@ -1,6 +1,7 @@
 package ru.kudesnik.infograce.ui
 
 
+import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.os.Bundle
 import android.util.DisplayMetrics
@@ -23,6 +24,8 @@ class MainActivityK : AppCompatActivity() {
     //Ширина экрана - 1080, шторка на 391dp закрывает полностью экран
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+
         setContentView(R.layout.activity_without_drawer)
 
 //        if (savedInstanceState == null) {

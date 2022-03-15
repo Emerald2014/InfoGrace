@@ -1,11 +1,14 @@
 package ru.kudesnik.infograce.ui.layer_fragment
 
 import android.annotation.SuppressLint
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -59,14 +62,21 @@ open class LayerFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
+        checkFirstLaunch()
         _binding = FragmentLayerBinding.inflate(inflater, container, false)
         return binding.root
     }
 
+
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        items2 = repository.getItems(requireContext())
+
+//        items2 = repository.getItems(requireContext())
+//Thread{
+//
+//    items2 = repository.getAllItems()
+//}
 //        Thread {
 //            for (item in items2) {
 //                repository.insertItem(item)
@@ -249,8 +259,21 @@ open class LayerFragment : Fragment() {
                     }
                 }
             })
+//Button Remove All
+            buttonDrag.setOnClickListener {
+                if (buttonDrag.visibility == View.VISIBLE) {
+
+                    Thread {
+                        for (item in repository.getAllItems()) {
+                            item
+                        }
+                    }.start()
+                }
+            }
+
         }
     }
+
 
     private fun getMainSliderPosition() = with(binding) {
 
@@ -370,6 +393,26 @@ open class LayerFragment : Fragment() {
 
     interface DoUpdateSlider {
         fun doUpdateSlider()
+    }
+    private fun checkFirstLaunch() {
+        if (activity != null) {
+            val pref: SharedPreferences = requireActivity().getSharedPreferences(
+                "myPreferences",
+                AppCompatActivity.MODE_PRIVATE
+            )
+            val isFirstLaunch = pref.getBoolean("first_usage", true)
+            if (isFirstLaunch) {
+                Thread {
+                    for (item in repository.getItems(requireContext())) {
+                        Log.d("myTag", item.toString())
+                        repository.insertItem(item)
+                    }
+                }.start()
+                val editor: SharedPreferences.Editor = pref.edit()
+                editor.putBoolean("first_usage", false)
+                editor.commit()
+            }
+        }
     }
 
     companion object {
