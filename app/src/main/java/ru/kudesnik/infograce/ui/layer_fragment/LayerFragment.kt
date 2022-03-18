@@ -2,6 +2,7 @@ package ru.kudesnik.infograce.ui.layer_fragment
 
 import android.annotation.SuppressLint
 import android.content.SharedPreferences
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -17,6 +18,7 @@ import com.google.android.material.slider.Slider
 import kotlinx.coroutines.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.scope.Scope
+import ru.kudesnik.infograce.R
 import ru.kudesnik.infograce.databinding.FragmentLayerBinding
 import ru.kudesnik.infograce.model.AppState
 import ru.kudesnik.infograce.model.entities.Item
@@ -29,10 +31,14 @@ import ru.kudesnik.infograce.ui.utils.ItemMoveCallback
 1+. Перетаскивание элементов списка
 2+. Сортировка списка по позиции, а не по порядку
 3+. Сохранение в SharedPreference позиции, и переменных
-4. Разобраться почему фрагменты не полностью подменяют друг друга, и при открытии выезжающей части начинают глючить
-5. Нижнее меню
-6. Разобраться почему нижнее меню не привязано к низу экрана
-7. Добавить вью модель для оперативного обновления данных во вью*/
+4. Разобраться почему фрагменты при использовании шторки не полностью подменяют друг друга, и при открытии выезжающей части начинают глючить
+5+. Нижнее меню
+6. Разобраться почему нижнее меню не привязано к низу экрана в шторке
+7+. Добавить вью модель для оперативного обновления данных во вью
+8. При нажатии в нижнем меню кнопки перетаскивания менять значки на всех элементах
+9. Функции главного слайдера по изменению состояние всех элементов и сохранению их значения для возврата
+10. Добавление элемента в базу данных по кнопке
+*/
 
 
 open class LayerFragment : Fragment() {
@@ -40,18 +46,21 @@ open class LayerFragment : Fragment() {
 
     private var _binding: FragmentLayerBinding? = null
     private val binding get() = _binding!!
-    private val adapterLayer: LayerFragmentAdapter by lazy {
-        LayerFragmentAdapter(requireContext(), object : DoUpdate {
-            override fun doUpdateItem(item: Item) {
-                viewModel.update(item = item)
-            }
-        }, object : DoUpdateSlider {
-            override fun doUpdateSlider() {
-                getMainSliderPosition()
-            }
+    private var isMovingMode = false
+    private var adapterLayer: LayerFragmentAdapter? = null
 
-        })
-    }
+    //    by lazy {
+//        LayerFragmentAdapter(requireContext(), object : DoUpdate {
+//            override fun doUpdateItem(item: Item) {
+//                viewModel.update(item = item)
+//            }
+//        }, object : DoUpdateSlider {
+//            override fun doUpdateSlider() {
+//                getMainSliderPosition()
+//            }
+//
+//        }, isMovingMode)
+//    }
     private var recyclerViewVer2: RecyclerView? = null
     private val repository = RepositoryImpl()
     lateinit var items2: List<Item>
@@ -66,7 +75,6 @@ open class LayerFragment : Fragment() {
         _binding = FragmentLayerBinding.inflate(inflater, container, false)
         return binding.root
     }
-
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -123,7 +131,7 @@ open class LayerFragment : Fragment() {
             viewModel.getLiveData().observe(viewLifecycleOwner) { renderData(it) }
             val callback: ItemTouchHelper.Callback = ItemMoveCallback(adapterLayer)
             val touchHelper = ItemTouchHelper(callback)
-            touchHelper.attachToRecyclerView(recyclerViewVer2)
+            if (isMovingMode) touchHelper.attachToRecyclerView(recyclerViewVer2)
 //Конец кода
 //            recyclerViewVer2!!.adapter = adapterLayer
 
@@ -244,6 +252,7 @@ open class LayerFragment : Fragment() {
 //
 //            sliderAll.value = viewModel.getMainSliderPosition().toFloat()
             getMainSliderPosition()
+
             Log.d("myTag", "Value - ${sliderAll.value.toString()}")
             sliderAll.addOnSliderTouchListener(object : Slider.OnSliderTouchListener {
                 @SuppressLint("RestrictedApi")
@@ -261,16 +270,17 @@ open class LayerFragment : Fragment() {
             })
 //Button Remove All
             buttonDrag.setOnClickListener {
-                if (buttonDrag.visibility == View.VISIBLE) {
+                if (isMovingMode) {
+                    llButtonDrag.setBackgroundColor(Color.parseColor("#4D566F"))
 
-                    Thread {
-                        for (item in repository.getAllItems()) {
-                            item
-                        }
-                    }.start()
+                    isMovingMode = false
+                    viewModel.getLiveData().observe(viewLifecycleOwner) { renderData(it) }
+                } else {
+                    llButtonDrag.setBackgroundColor(Color.parseColor("#59BD87"))
+                    isMovingMode = true
+                    viewModel.getLiveData().observe(viewLifecycleOwner) { renderData(it) }
                 }
             }
-
         }
     }
 
@@ -293,6 +303,20 @@ open class LayerFragment : Fragment() {
             }
             activity?.runOnUiThread {
                 sliderAll.value = test.toFloat()
+//                when(test) {
+//                    0 -> {
+//                        mainSwitch.setImageResource(R.drawable.ic_baseline_battery_0_bar_24)
+//
+//                    }
+//                    1 -> {
+//                        mainSwitch.setImageResource(R.drawable.ic_baseline_battery_4_bar_24)
+//
+//                    }
+//                    2 -> {
+//                        mainSwitch.setImageResource(R.drawable.ic_baseline_battery_full_24)
+//
+//                    }
+//                }
                 Log.d("myTag", "Тест в методе во фрагменте Test = $test")
 
             }
@@ -307,7 +331,19 @@ open class LayerFragment : Fragment() {
     private fun renderData(appState: AppState) = with(binding) {
         when (appState) {
             is AppState.Success -> {
-                adapterLayer.apply {
+                adapterLayer = LayerFragmentAdapter(requireContext(), object : DoUpdate {
+                    override fun doUpdateItem(item: Item) {
+                        viewModel.update(item = item)
+                    }
+                }, object : DoUpdateSlider {
+                    override fun doUpdateSlider() {
+                        getMainSliderPosition()
+                    }
+
+                }, isMovingMode)
+
+
+                adapterLayer?.apply {
                     setItems(appState.modelData)
 
                 }
@@ -394,6 +430,7 @@ open class LayerFragment : Fragment() {
     interface DoUpdateSlider {
         fun doUpdateSlider()
     }
+
     private fun checkFirstLaunch() {
         if (activity != null) {
             val pref: SharedPreferences = requireActivity().getSharedPreferences(

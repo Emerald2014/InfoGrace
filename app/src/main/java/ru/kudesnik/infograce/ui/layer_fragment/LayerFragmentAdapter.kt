@@ -22,11 +22,13 @@ import java.util.*
 class LayerFragmentAdapter(
     private val context: Context,
     private val updateItem: LayerFragment.DoUpdate,
-    private val updateMainSlider: LayerFragment.DoUpdateSlider
+    private val updateMainSlider: LayerFragment.DoUpdateSlider,
+    private val isMovingMode: Boolean
 
 ) :
     RecyclerView.Adapter<LayerFragmentAdapter.MyViewHolder>(),
-    ItemMoveCallback.ItemTouchHelperContract {
+    ItemMoveCallback.ItemTouchHelperContract{
+
     private lateinit var binding: ItemLayerBinding
     private var itemList = ArrayList<Item>()
 
@@ -66,20 +68,27 @@ class LayerFragmentAdapter(
 
             }
 //Switch
-            val switch = switchItem
-            switchItem.isChecked = item.isCheckedSwitch
+            if (item.isVisible) {
+                val switch = switchItem
+                switchItem.isChecked = item.isCheckedSwitch
 
-            switchItem.setOnCheckedChangeListener { buttonView, isChecked ->
-                val check = if (isChecked) "включен" else "выключен"
+                switchItem.setOnCheckedChangeListener { buttonView, isChecked ->
+                    val check = if (isChecked) "включен" else "выключен"
 
-                Toast.makeText(context, "Переключатель $check", Toast.LENGTH_SHORT).show()
-                item.isCheckedSwitch = isChecked
-                updateItem.doUpdateItem(item)
-                updateMainSlider.doUpdateSlider()
+//                Toast.makeText(context, "Переключатель $check", Toast.LENGTH_SHORT).show()
+                    item.isCheckedSwitch = isChecked
+                    item.savedSwitchPosition = isChecked
+                    updateItem.doUpdateItem(item)
+                    updateMainSlider.doUpdateSlider()
 
 //                switchChecked.setCheckedSwitch(item)
 //                setCurrentSwitch(isChecked, item.id)
+                }
+            } else {
+                switchItem.isClickable = false
             }
+
+
 //Buttons
             val button1 = itemButton1
             button1.setOnClickListener {
@@ -157,7 +166,16 @@ class LayerFragmentAdapter(
                 }
                 true
             }
+//Режим перемещения
+            if (isMovingMode) {
+                switchItem.visibility = View.GONE
+                buttonRemove.visibility = View.VISIBLE
+            } else {
+                switchItem.visibility = View.VISIBLE
+                buttonRemove.visibility = View.GONE
+            }
         }
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
@@ -229,20 +247,22 @@ class LayerFragmentAdapter(
     override fun getItemCount(): Int = itemList.size
 
     override fun onRowMoved(fromPosition: Int, toPosition: Int) {
-        if (fromPosition < toPosition) {
-            for (i in fromPosition until toPosition) {
-                Collections.swap(itemList, i, i + 1)
-            }
-        } else {
+
+            if (fromPosition < toPosition) {
+                for (i in fromPosition until toPosition) {
+                    Collections.swap(itemList, i, i + 1)
+                }
+            } else {
 //            setCurrentPositionUp(toPosition)
 
-            for (i in fromPosition downTo toPosition + 1) {
-                Collections.swap(itemList, i, i - 1)
+                for (i in fromPosition downTo toPosition + 1) {
+                    Collections.swap(itemList, i, i - 1)
+                }
             }
+            notifyItemMoved(fromPosition, toPosition)
         }
-        notifyItemMoved(fromPosition, toPosition)
     }
-}
+
 
 
 
